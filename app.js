@@ -19,6 +19,7 @@ app.use(require("express-session")({
 app.use(passport.initialize());
 app.use(passport.session());
 
+passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
@@ -32,11 +33,12 @@ app.get("/secret", function(req, res){
 	res.render("secret");
 });
 
+//handling user signup the View Rendering Part
 app.get("/register", function(req, res){
 	res.render("register");
 });
 
-//handling user signup
+//handling user signup the Logical Part
 app.post("/register", function(req, res){
 	req.body.username
 	req.body.password
@@ -51,6 +53,21 @@ app.post("/register", function(req, res){
 		});
 	});
 });
+
+//handling user login the View Rendering Part
+app.get("/login", function(req, res){
+	res.render("login");
+});
+
+//handling user signup the Logical Part
+app.post("/login", passport.authenticate("local", {
+		successRedirect: "/secret",
+		failureRedirect: "/login"
+})	, function(req, res){
+	console.log("Login Sucessful");
+});
+
+
 var server = app.listen(5000, function(){
 	console.log("server has started on port 5000");	
 });
