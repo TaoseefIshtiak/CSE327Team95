@@ -29,7 +29,7 @@ app.get("/", function(req, res){
 
 app.use(express.static(__dirname + '/views'));
 
-app.get("/secret", function(req, res){
+app.get("/secret", isLoggedIn, function(req, res){
 	res.render("secret");
 });
 
@@ -66,6 +66,18 @@ app.post("/login", passport.authenticate("local", {
 })	, function(req, res){
 	console.log("Login Sucessful");
 });
+
+app.get("/logout", function(req, res){
+	req.logout();
+	res.redirect("/");
+});
+
+function isLoggedIn(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	}
+	res.redirect("/login");
+}
 
 
 var server = app.listen(5000, function(){
