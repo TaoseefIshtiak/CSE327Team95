@@ -40,15 +40,27 @@ app.get("/register", function(req, res){
 
 //handling user signup the Logical Part
 app.post("/register", function(req, res){
+	req.body.firstName
+	req.body.lastName
 	req.body.username
+	req.body.eMail
+	req.body.avatar
 	req.body.password
-	User.register(new User({username: req.body.username}), req.body.password, function(err, user){
+	User.register(new User({
+		// firstName: req.body.firstName, 
+		// lastName: req.body.lastName, 
+		username: req.body.username, 
+		// eMail: req.body.eMail, 
+		// avatar: req.body.avatar
+	}), 
+	req.body.password, function(err, user){
 		if(err){
 			console.log(err);
 			return res.render('register');
 		}
 		passport.authenticate("local")(req, res, function(){
 			res.redirect("/secret");
+			console.log("User account creation successful for "+ req.body.username);
 			console.log("a new user added to the users collection");
 		});
 	});
@@ -78,6 +90,17 @@ function isLoggedIn(req, res, next){
 	}
 	res.redirect("/login");
 }
+
+//user profile creation logical part
+app.get("/user/:username", function(req, res){
+	User.findById(req.params.username, function(err, foundUser){
+		if(err){
+			console.log(err, "something went wrong");
+			return res.render('register');
+		}
+		res.redirect("/profile", {user: foundUser});
+	});
+});
 
 
 var server = app.listen(5000, function(){
