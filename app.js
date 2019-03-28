@@ -59,7 +59,9 @@ app.post("/register", function(req, res){
 			return res.render('register');
 		}
 		passport.authenticate("local")(req, res, function(){
-			res.redirect("/secret");
+			res.render("/profile", {
+				// list: docs
+			});
 			console.log("User account creation successful for "+ req.body.username);
 			console.log("a new user added to the users collection");
 		});
