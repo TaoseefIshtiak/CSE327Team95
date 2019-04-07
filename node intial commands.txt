@@ -11,3 +11,5 @@ npm install body-parser express-session --save
 npm install ejs --save
 
 npm i locus
+
+files inside models package contains database configuration with js
