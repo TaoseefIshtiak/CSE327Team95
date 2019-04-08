@@ -5,7 +5,7 @@ var express = require("express"),
 	User = require("./models/user"),	
 	LocalStrategy = require("passport-local"),
 	passportLocalMongoose = require("passport-local-mongoose")
-mongoose.connect("mongodb://localhost/loginreg_auth");
+mongoose.connect("mongodb://localhost/groupee");
 
 
 var app = express();
@@ -29,7 +29,11 @@ app.get("/", function(req, res){
 
 app.use(express.static(__dirname + '/views'));
 
-app.get("/secret", isLoggedIn, function(req, res){
+app.get("/profile", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
+	res.render("profile");
+});
+
+app.get("/secret", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
 	res.render("secret");
 });
 
@@ -44,22 +48,20 @@ app.post("/register", function(req, res){
 	req.body.lastName
 	req.body.username
 	req.body.eMail
-	req.body.avatar
 	req.body.password
 	User.register(new User({
-		// firstName: req.body.firstName, 
-		// lastName: req.body.lastName, 
+		firstName: req.body.firstName, 
+		lastName: req.body.lastName, 
 		username: req.body.username, 
-		// eMail: req.body.eMail, 
-		// avatar: req.body.avatar
+		eMail: req.body.eMail, 
 	}), 
-	req.body.password, function(err, user){
+	req.body.password, function(err, user){ //use of middleware
 		if(err){
 			console.log(err);
 			return res.render('register');
 		}
 		passport.authenticate("local")(req, res, function(){
-			res.render("/profile", {
+			res.render("profile", {
 				// list: docs
 			});
 			console.log("User account creation successful for "+ req.body.username);
@@ -73,16 +75,16 @@ app.get("/login", function(req, res){
 	res.render("login");
 });
 
-//handling user signup the Logical Part
+//handling user login the Logical Part
 app.post("/login", passport.authenticate("local", {
 		successRedirect: "/secret",
-		failureRedirect: "/login"
+		failureRedirect: "/login"   //use of facade design pattern
 })	, function(req, res){
 	console.log("Login Sucessful");
 });
 
 app.get("/logout", function(req, res){
-	req.logout();
+	req.logout(); 	//use of facade design pattern
 	res.redirect("/");
 });
 

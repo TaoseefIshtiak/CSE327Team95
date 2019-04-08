@@ -9,12 +9,12 @@ var UserSchema = new mongoose.Schema({
 	},
 	firstName: String,
 	lastName: String,
-	email: String,
+	eMail: String,
 	phoneNo: String,
 	userName: String,
 	password: String,
 	avatar: String,
-	tasks: String,
+	toDos: String,
 	dateTime: Date
 });
 
@@ -22,4 +22,4 @@ var UserSchema = new mongoose.Schema({
 UserSchema.plugin(passportLocalMongoose);
 
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model("user", UserSchema);
