@@ -23,8 +23,20 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+
+//creating a new group from home page
 app.get("/", function(req, res){
 	res.render("home");
+});
+
+app.post("/", function(req, res){
+	res.render("groupHome");
+});
+
+//createGroup
+
+app.get("/grouphome", function(req, res){
+	res.render("grouphome");
 });
 
 app.use(express.static(__dirname + '/views'));

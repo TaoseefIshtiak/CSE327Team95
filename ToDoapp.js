@@ -1,23 +1,28 @@
 const express = require('express');
+var mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require('path');
 const Joi = require('joi');
 
-const db = require("./db");
-const collection = "todo";
+const db = require("./models/user.js");
+const collection = "users";
 const app = express();
+
+mongoose.connect("mongodb://localhost/groupee");
 
 // schema used for data validation for our todo document
 const schema = Joi.object().keys({
     todo : Joi.string().required()
 });
 
+app.use(express.static(__dirname + '/views'));
+
 // parses json data sent to us by the user 
 app.use(bodyParser.json());
 
 // serve static html file to user
-app.get('/',(req,res)=>{
-    res.sendFile(path.join(__dirname,'index.html'));
+app.get("/", function(req, res){
+	res.render("todo");
 });
 
 // read
@@ -104,19 +109,23 @@ app.use((err,req,res,next)=>{
 })
 
 
-db.connect((err)=>{
-    // If err unable to connect to database
-    // End application
-    if(err){
-        console.log('unable to connect to database');
-        process.exit(1);
-    }
-    // Successfully connected to database
-    // Start up our Express Application
-    // And listen for Request
-    else{
-        app.listen(3000,()=>{
-            console.log('connected to database, app listening on port 3000');
-        });
-    }
+// db.connect((err)=>{
+//     // If err unable to connect to database
+//     // End application
+//     if(err){
+//         console.log('unable to connect to database');
+//         process.exit(1);
+//     }
+//     // Successfully connected to database
+//     // Start up our Express Application
+//     // And listen for Request
+//     else{
+//         app.listen(3000,()=>{
+//             console.log('connected to database, app listening on port 3000');
+//         });
+//     }
+// });
+
+var server = app.listen(5000, function(){
+	console.log("server has started on port 5000");	
 });
