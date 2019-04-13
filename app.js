@@ -154,7 +154,7 @@ app.get('/profile', isLoggedIn, function(req, res){  //using middleware and a fa
             return res.status(400).send(err);
 		// here were are passing to our view all the elements we got from out query
 		console.log("entered into " + User.username + "profile");
-        res.render('profile', { title: 'Express', username: req.session.user, successful: req.query.valid, data: result });
+        res.render('profile', { title: 'Express', username: req.session.username, successful: req.query.valid, data: result });
     });
 });
 
