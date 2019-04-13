@@ -4,19 +4,28 @@ var express = require("express"),
 	bodyParser = require("body-parser"),
 	User = require("./models/user"),	
 	LocalStrategy = require("passport-local"),
-	passportLocalMongoose = require("passport-local-mongoose")
-const path = require('path');
-const Joi = require('joi');
-
-const db = require("./models/user.js");
-const collection = "users";
-// const app = express();
-
-mongoose.connect("mongodb://localhost/groupee");
-
+	passportLocalMongoose = require("passport-local-mongoose"),
+	path = require('path'),
+	Joi = require('joi'),
+	url = "mongodb://localhost:27017",
+	//db = require("./models/user.js"),
+	//collection = "users";
+	MongoClient = require("mongodb").MongoClient;
+	
 
 
-var app = express();
+
+const app = express();
+const mongoOptions = {useNewUrlParser : true};
+//mongoose.connect("mongodb://localhost/groupee");
+//User.getDB();
+
+//database connection part start  //////////////////////////////////////////
+mongoose.connect('mongodb://localhost:27017/groupee' , { useNewUrlParser: true });
+
+
+// database connection part ends /////////////////////////////////////////
+
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(require("express-session")({
@@ -115,6 +124,53 @@ function isLoggedIn(req, res, next){
 	res.redirect("/login");
 }
 
+// app.get("/myToDos", function(req,res){
+//     // get all Todo documents within our todo collection
+// 	// send back to user as json
+// 	console.log("taoseeeeeefff");
+//     db.getDB().collection(collection).find({}).toArray((err,documents)=>{
+//         if(err)
+//             console.log(err);
+//         else{
+//             res.json(documents);
+//         }
+//     });
+// });
+
+//experiment code
+app.get('/myToDos', function(req, res) {
+	
+	MongoClient.connect(url, (err, client) => {
+		if (err) {
+		  console.error(err)
+		  return
+		}
+		else{
+			const db = client.db('groupee');
+			const collection = db.collection('users');
+			collection.find().toArray((err, items) => {
+				// res.render('todos', {
+				// 	infos: items
+				// });
+				// console.log(items)
+				Infos = items;
+				//var parseVal = JSON.parse(items);
+         		console.log(items);
+            	res.render('todo', {'infos': items});
+			  });
+		}
+	  });
+	// User.connect();
+    // mongoose operations are asynchronous, so you need to wait 
+    // User.infos.find({}, function(err, data) {
+    //     // note that data is an array of objects, not a single object!
+    //     res.render('myToDos.ejs', {
+    //         user : req.user,
+    //         infos: data
+    //     });
+    // });
+});
+
 // //user profile creation logical part
 // app.get("/user/:username", function(req, res){
 // 	User.findById(req.params.username, function(err, foundUser){
@@ -138,10 +194,7 @@ const schema = Joi.object().keys({
 // parses json data sent to us by the user 
 app.use(bodyParser.json());
 
-// serve static html file to user
-app.get("/myToDos", function(req, res){
-	res.render("todo");
-});
+
 
 // app.get("/profile", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
 // 	res.render("profile");
@@ -159,17 +212,19 @@ app.get('/profile', isLoggedIn, function(req, res){  //using middleware and a fa
 });
 
 // // read
-app.get('/myToDos',(req,res)=>{
-    // get all Todo documents within our todo collection
-    // send back to user as json
-    db.getDB().collection(collection).find({}).toArray((err,documents)=>{
-        if(err)
-            console.log(err);
-        else{
-            res.json(documents);
-        }
-    });
-});
+
+// app.get('/myToDos',(req,res){
+//     // get all Todo documents within our todo collection
+// 	// send back to user as json
+// 	console.log("taoseeeeeefff");
+//     db.getDB().collection(collection).find({}).toArray((err,documents)=>{
+//         if(err)
+//             console.log(err);
+//         else{
+//             res.json(documents);
+//         }
+//     });
+// });
 
 // update
 app.put('/:id',(req,res)=>{
@@ -177,7 +232,7 @@ app.put('/:id',(req,res)=>{
     const todoID = req.params.id;
     // Document used to update
     const userInput = req.body;
-    // Find Document By ID and Update
+	// Find Document By ID and Update
     db.getDB().collection(collection).findOneAndUpdate({_id : db.getPrimaryKey(todoID)},{$set : {todo : userInput.todo}},{returnOriginal : false},(err,result)=>{
         if(err)
             console.log(err);
@@ -240,8 +295,6 @@ app.use((err,req,res,next)=>{
         }
     });
 })
-
-
 
 var server = app.listen(5000, function(){
 	console.log("server has started on port 5000");	

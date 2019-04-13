@@ -12,6 +12,31 @@
   </head>
   <body>
 
+        <table class="table table-inverse">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Username</th>
+          
+                  </tr>
+                </thead>
+          
+                <tbody>
+                  <% for(var i=0; i < infos.length; i++) { %>
+                 <tr>
+          
+                   <td><%= infos[i].firstName %></td>
+                   <td><%= infos[i].eMail %></td>
+                   <td><%= infos[i].username %></td>
+          
+          
+                 </tr>
+              <% } %>
+                </tbody>
+          
+              </table>
+
         <h1>Create your todos here</h1>
         
         <li><a href = "/register">Signup</a></li>
