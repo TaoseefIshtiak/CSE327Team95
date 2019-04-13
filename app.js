@@ -5,7 +5,15 @@ var express = require("express"),
 	User = require("./models/user"),	
 	LocalStrategy = require("passport-local"),
 	passportLocalMongoose = require("passport-local-mongoose")
+const path = require('path');
+const Joi = require('joi');
+
+const db = require("./models/user.js");
+const collection = "users";
+// const app = express();
+
 mongoose.connect("mongodb://localhost/groupee");
+
 
 
 var app = express();
@@ -41,9 +49,9 @@ app.get("/grouphome", function(req, res){
 
 app.use(express.static(__dirname + '/views'));
 
-app.get("/profile", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
-	res.render("profile");
-});
+// app.get("/profile", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
+// 	res.render("profile");
+// });
 
 app.get("/secret", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
 	res.render("secret");
@@ -107,21 +115,131 @@ function isLoggedIn(req, res, next){
 	res.redirect("/login");
 }
 
-//user profile creation logical part
-app.get("/user/:username", function(req, res){
-	User.findById(req.params.username, function(err, foundUser){
-		if(err){
-			console.log(err, "something went wrong");
-			return res.render('register');
-		}
-		res.redirect("/profile", {user: foundUser});
-	});
+// //user profile creation logical part
+// app.get("/user/:username", function(req, res){
+// 	User.findById(req.params.username, function(err, foundUser){
+// 		if(err){
+// 			console.log(err, "something went wrong");
+// 			return res.render('register');
+// 		}
+// 		res.redirect("/profile", {user: foundUser});
+// 	});
+// });
+
+
+
+// schema used for data validation for our todo document
+const schema = Joi.object().keys({
+    todo : Joi.string().required()
 });
 
-//handling todo part (view part)
+//app.use(express.static(__dirname + '/views'));
+
+// parses json data sent to us by the user 
+app.use(bodyParser.json());
+
+// serve static html file to user
 app.get("/myToDos", function(req, res){
 	res.render("todo");
 });
+
+// app.get("/profile", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
+// 	res.render("profile");
+// });
+
+//experiment code
+app.get('/profile', isLoggedIn, function(req, res){  //using middleware and a facade design pattern
+    db.find({}, function(err, result){
+        if(err)
+            return res.status(400).send(err);
+		// here were are passing to our view all the elements we got from out query
+		console.log("entered into " + User.username + "profile");
+        res.render('profile', { title: 'Express', username: req.session.user, successful: req.query.valid, data: result });
+    });
+});
+
+// // read
+app.get('/myToDos',(req,res)=>{
+    // get all Todo documents within our todo collection
+    // send back to user as json
+    db.getDB().collection(collection).find({}).toArray((err,documents)=>{
+        if(err)
+            console.log(err);
+        else{
+            res.json(documents);
+        }
+    });
+});
+
+// update
+app.put('/:id',(req,res)=>{
+    // Primary Key of Todo Document we wish to update
+    const todoID = req.params.id;
+    // Document used to update
+    const userInput = req.body;
+    // Find Document By ID and Update
+    db.getDB().collection(collection).findOneAndUpdate({_id : db.getPrimaryKey(todoID)},{$set : {todo : userInput.todo}},{returnOriginal : false},(err,result)=>{
+        if(err)
+            console.log(err);
+        else{
+            res.json(result);
+        }      
+    });
+});
+
+
+//create
+app.post('/',(req,res,next)=>{
+    // Document to be inserted
+    const userInput = req.body;
+
+    // Validate document
+    // If document is invalid pass to error middleware
+    // else insert document within todo collection
+    Joi.validate(userInput,schema,(err,result)=>{
+        if(err){
+            const error = new Error("Invalid Input");
+            error.status = 400;
+            next(error);
+        }
+        else{
+            db.getDB().collection(collection).insertOne(userInput,(err,result)=>{
+                if(err){
+                    const error = new Error("Failed to insert Todo Document");
+                    error.status = 400;
+                    next(error);
+                }
+                else
+                    res.json({result : result, document : result.ops[0],msg : "Successfully inserted Todo!!!",error : null});
+            });
+        }
+    })    
+});
+
+
+
+//delete
+app.delete('/:id',(req,res)=>{
+    // Primary Key of Todo Document
+    const todoID = req.params.id;
+    // Find Document By ID and delete document from record
+    db.getDB().collection(collection).findOneAndDelete({_id : db.getPrimaryKey(todoID)},(err,result)=>{
+        if(err)
+            console.log(err);
+        else
+            res.json(result);
+    });
+});
+
+// Middleware for handling Error
+// Sends Error Response Back to User
+app.use((err,req,res,next)=>{
+    res.status(err.status).json({
+        error : {
+            message : err.message
+        }
+    });
+})
 
 
 
