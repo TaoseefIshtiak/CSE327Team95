@@ -17,6 +17,7 @@ var express = require("express"),
 
 const app = express();
 const mongoOptions = {useNewUrlParser : true};
+const temp = "username";
 //mongoose.connect("mongodb://localhost/groupee");
 //User.getDB();
 
@@ -105,12 +106,32 @@ app.get("/login", function(req, res){
 });
 
 //handling user login the Logical Part
-app.post("/login", passport.authenticate("local", {
-		successRedirect: "/secret",
-		failureRedirect: "/login"   //use of facade design pattern
-})	, function(req, res){
-	console.log("Login Sucessful");
-});
+app.post("/login", function(req, res){
+	req.body.firstName
+	req.body.lastName
+	req.body.username
+	req.body.eMail
+	req.body.password
+	passport.authenticate("local")(req, res, function(){
+		res.render("profile", {
+			'infos': req.body.username
+	});
+		console.log("welcome "+ req.body.username);
+		});
+}, passport.authenticate("local", {
+	successRedirect: "/secret",
+	failureRedirect: "/login"
+}));
+
+
+
+// //handling user signup the Logical Part
+// app.post("/login", passport.authenticate("local", {
+// 	successRedirect: "/secret",
+// 	failureRedirect: "/login"
+// })	, function(req, res){
+// console.log("Login Sucessful");
+// });
 
 app.get("/logout", function(req, res){
 	req.logout(); 	//use of facade design pattern
@@ -124,20 +145,8 @@ function isLoggedIn(req, res, next){
 	res.redirect("/login");
 }
 
-// app.get("/myToDos", function(req,res){
-//     // get all Todo documents within our todo collection
-// 	// send back to user as json
-// 	console.log("taoseeeeeefff");
-//     db.getDB().collection(collection).find({}).toArray((err,documents)=>{
-//         if(err)
-//             console.log(err);
-//         else{
-//             res.json(documents);
-//         }
-//     });
-// });
 
-//experiment code
+//todo list read
 app.get('/myToDos', function(req, res) {
 	
 	MongoClient.connect(url, (err, client) => {
@@ -160,15 +169,7 @@ app.get('/myToDos', function(req, res) {
 			  });
 		}
 	  });
-	// User.connect();
-    // mongoose operations are asynchronous, so you need to wait 
-    // User.infos.find({}, function(err, data) {
-    //     // note that data is an array of objects, not a single object!
-    //     res.render('myToDos.ejs', {
-    //         user : req.user,
-    //         infos: data
-    //     });
-    // });
+    
 });
 
 // //user profile creation logical part
