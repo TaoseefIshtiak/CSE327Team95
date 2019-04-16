@@ -15,20 +15,13 @@ const mongoOptions = {useNewUrlParser : true};
 
 
 var UserSchema = new mongoose.Schema({
-	// userID: {
-	// 	type: Number,
-	// 	autoIncreament: true,
-	// 	primaryKey: true
-	// },
-	firstName: String,
-	lastName: String,
-	username: String,
-	eMail: String,
-	password: String,
-	//phoneNo: String,
-	//avatar: String,
-	//toDos: String,
-	//dateTime: Date
+    groupName = String,
+	groupID = Number,
+	type = String,
+	objective = String,
+	userprofile = String,
+	userID = String,
+	chats = String,
 });
 
 

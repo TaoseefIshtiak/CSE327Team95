@@ -2,12 +2,16 @@ var express = require("express"),
 	mongoose = require("mongoose"),
 	passport = require("passport"),
 	bodyParser = require("body-parser"),
-	User = require("./models/user"),	
+	User = require("./models/user"),
+	Group = require("./models/groupModel"),	
 	LocalStrategy = require("passport-local"),
 	passportLocalMongoose = require("passport-local-mongoose"),
 	path = require('path'),
 	Joi = require('joi'),
 	url = "mongodb://localhost:27017",
+	userprofile =  null;
+	userID = null;
+	groupID = null;
 	//db = require("./models/user.js"),
 	//collection = "users";
 	MongoClient = require("mongodb").MongoClient;
@@ -47,14 +51,55 @@ app.get("/", function(req, res){
 	res.render("home");
 });
 
-app.post("/", function(req, res){
-	res.render("groupHome");
-});
 
 //createGroup
 
 app.get("/grouphome", function(req, res){
 	res.render("grouphome");
+});
+
+//handling Group Creation the Logical Part
+app.post("/grouphome", function(req, res){
+	req.body.groupName
+	groupID = 1
+	req.body.type
+	req.body.objective
+	adminName=userprofile
+	userID = 1
+	chats = null
+
+	// MongoClient.connect(url, (err, client) => {
+	// 	if (err) {
+	// 	  console.error(err)
+	// 	  return
+	// 	}
+	// 	else{
+	// 		const db = client.db('groupee');
+	// 		const collection = db.collection('users');
+	// 		collection.find().toArray((err, items) => {
+	// 			// res.render('todos', {
+	// 			// 	infos: items
+	// 			// });
+	// 			// console.log(items)
+	// 			Infos = items;
+	// 			//var parseVal = JSON.parse(items);
+    //      		console.log(items);
+    //         	res.render('todo', {'infos': items});
+	// 		  });
+	// 	}
+	//   });
+
+	Group.registerGroup(new Group({
+		groupName: req.body.groupName, 
+		type: req.body.type, 
+		objective: req.body.objective,  
+	}), 
+	req.body.password, function(err, user){ //use of middleware
+		if(err){
+			console.log(err);
+			return res.render('register');
+		}
+	});
 });
 
 app.use(express.static(__dirname + '/views'));
@@ -112,11 +157,12 @@ app.post("/login", function(req, res){
 	req.body.username
 	req.body.eMail
 	req.body.password
+	userprofile = req.body.username
 	passport.authenticate("local")(req, res, function(){
 		res.render("profile", {
 			'infos': req.body.username
 	});
-		console.log("welcome "+ req.body.username);
+		console.log("hello "+ userprofile);
 		});
 }, passport.authenticate("local", {
 	successRedirect: "/secret",
@@ -172,18 +218,6 @@ app.get('/myToDos', function(req, res) {
     
 });
 
-// //user profile creation logical part
-// app.get("/user/:username", function(req, res){
-// 	User.findById(req.params.username, function(err, foundUser){
-// 		if(err){
-// 			console.log(err, "something went wrong");
-// 			return res.render('register');
-// 		}
-// 		res.redirect("/profile", {user: foundUser});
-// 	});
-// });
-
-
 
 // schema used for data validation for our todo document
 const schema = Joi.object().keys({
@@ -202,14 +236,11 @@ app.use(bodyParser.json());
 // });
 
 //experiment code
-app.get('/profile', isLoggedIn, function(req, res){  //using middleware and a facade design pattern
-    db.find({}, function(err, result){
-        if(err)
-            return res.status(400).send(err);
-		// here were are passing to our view all the elements we got from out query
-		console.log("entered into " + User.username + "profile");
-        res.render('profile', { title: 'Express', username: req.session.username, successful: req.query.valid, data: result });
-    });
+app.get('/profile', isLoggedIn, function(req, res){
+	res.render("profile", {
+	'infos': userprofile
+		});
+		console.log("welcome "+ userprofile);
 });
 
 // // read
