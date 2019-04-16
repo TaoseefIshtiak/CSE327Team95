@@ -14,14 +14,14 @@ const url = "mongodb://localhost:27017";
 const mongoOptions = {useNewUrlParser : true};
 
 
-var UserSchema = new mongoose.Schema({
-    groupName = String,
-	groupID = Number,
-	type = String,
-	objective = String,
-	userprofile = String,
-	userID = String,
-	chats = String,
+var GroupSchema = new mongoose.Schema({
+	groupName : String,
+	type : String,
+	objective : String,
+	groupID : Number,
+	adminName : String,
+	userID : Number,
+	chats : String,
 });
 
 
@@ -30,15 +30,9 @@ const getPrimaryKey = (_id)=>{
     return ObjectID(_id);
 }
 
-// returns database connection 
-const getDB = ()=>{
-    console.log("working");
-    return state.db;
-}
 
 
-UserSchema.plugin(passportLocalMongoose);
 
-module.exports = {getDB,connect,getPrimaryKey};
-module.exports = mongoose.model('infos', UserSchema, 'infos');
-module.exports = mongoose.model("user", UserSchema);
+GroupSchema.plugin(passportLocalMongoose);
+
+module.exports = mongoose.model("group", GroupSchema);

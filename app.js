@@ -3,7 +3,7 @@ var express = require("express"),
 	passport = require("passport"),
 	bodyParser = require("body-parser"),
 	User = require("./models/user"),
-	Group = require("./models/groupModel"),	
+	Group = require("./models/group"),	
 	LocalStrategy = require("passport-local"),
 	passportLocalMongoose = require("passport-local-mongoose"),
 	path = require('path'),
@@ -21,7 +21,6 @@ var express = require("express"),
 
 const app = express();
 const mongoOptions = {useNewUrlParser : true};
-const temp = "username";
 //mongoose.connect("mongodb://localhost/groupee");
 //User.getDB();
 
@@ -41,10 +40,25 @@ app.use(require("express-session")({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// schema used for data validation for our todo document
+const schema = Joi.object().keys({
+    todo : Joi.string().required()
+});
+
+//app.use(express.static(__dirname + '/views'));
+
+// parses json data sent to us by the user 
+app.use(bodyParser.json());
+
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use(express.static(__dirname + '/views'));
+
+// app.get("/profile", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
+// 	res.render("profile");
+// });
 
 //creating a new group from home page
 app.get("/", function(req, res){
@@ -60,53 +74,38 @@ app.get("/grouphome", function(req, res){
 
 //handling Group Creation the Logical Part
 app.post("/grouphome", function(req, res){
+	console.log(userprofile+ " is trying to create a group");
 	req.body.groupName
-	groupID = 1
 	req.body.type
 	req.body.objective
-	adminName=userprofile
+	groupID = 1
+	adminName = userprofile
 	userID = 1
 	chats = null
-
-	// MongoClient.connect(url, (err, client) => {
-	// 	if (err) {
-	// 	  console.error(err)
-	// 	  return
-	// 	}
-	// 	else{
-	// 		const db = client.db('groupee');
-	// 		const collection = db.collection('users');
-	// 		collection.find().toArray((err, items) => {
-	// 			// res.render('todos', {
-	// 			// 	infos: items
-	// 			// });
-	// 			// console.log(items)
-	// 			Infos = items;
-	// 			//var parseVal = JSON.parse(items);
-    //      		console.log(items);
-    //         	res.render('todo', {'infos': items});
-	// 		  });
-	// 	}
-	//   });
-
-	Group.registerGroup(new Group({
+	Group.grouphome(new Group({
 		groupName: req.body.groupName, 
 		type: req.body.type, 
-		objective: req.body.objective,  
-	}), 
-	req.body.password, function(err, user){ //use of middleware
-		if(err){
-			console.log(err);
-			return res.render('register');
-		}
+		objective: req.body.objective,
+		groupID : 	groupID,
+		adminName : userprofile,
+		userID :  userID,
+		chats : chats,  
+		}), 
+		function(err, group){ //use of middleware
+			if(err){
+				console.log(err);
+				return res.render('grouphome');
+			}
+			(req, res, function(){
+				res.render("profile", {
+					'infos': adminName
+				});
+			console.log("new group created "+ req.body.groupName);
+			console.log( userprofile+ " created "+ req.body.groupName);
+		});
 	});
 });
 
-app.use(express.static(__dirname + '/views'));
-
-// app.get("/profile", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
-// 	res.render("profile");
-// });
 
 app.get("/secret", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
 	res.render("secret");
@@ -137,7 +136,7 @@ app.post("/register", function(req, res){
 		}
 		passport.authenticate("local")(req, res, function(){
 			res.render("profile", {
-				// list: docs
+				'infos': req.body.username
 			});
 			console.log("User account creation successful for "+ req.body.username);
 			console.log("a new user added to the users collection");
@@ -152,10 +151,7 @@ app.get("/login", function(req, res){
 
 //handling user login the Logical Part
 app.post("/login", function(req, res){
-	req.body.firstName
-	req.body.lastName
 	req.body.username
-	req.body.eMail
 	req.body.password
 	userprofile = req.body.username
 	passport.authenticate("local")(req, res, function(){
@@ -217,18 +213,6 @@ app.get('/myToDos', function(req, res) {
 	  });
     
 });
-
-
-// schema used for data validation for our todo document
-const schema = Joi.object().keys({
-    todo : Joi.string().required()
-});
-
-//app.use(express.static(__dirname + '/views'));
-
-// parses json data sent to us by the user 
-app.use(bodyParser.json());
-
 
 
 // app.get("/profile", isLoggedIn, function(req, res){  //using middleware and a facade design pattern

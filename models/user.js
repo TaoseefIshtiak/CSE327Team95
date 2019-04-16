@@ -37,15 +37,9 @@ const getPrimaryKey = (_id)=>{
     return ObjectID(_id);
 }
 
-// returns database connection 
-const getDB = ()=>{
-    console.log("working");
-    return state.db;
-}
+
 
 
 UserSchema.plugin(passportLocalMongoose);
 
-module.exports = {getDB,connect,getPrimaryKey};
-module.exports = mongoose.model('infos', UserSchema, 'infos');
 module.exports = mongoose.model("user", UserSchema);
