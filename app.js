@@ -8,10 +8,11 @@ var express = require("express"),
 	passportLocalMongoose = require("passport-local-mongoose"),
 	path = require('path'),
 	Joi = require('joi'),
-	url = "mongodb://localhost:27017",
+	dburl = "mongodb://localhost:27017",
 	userprofile =  null;
-	userID = null;
-	groupID = null;
+	userID = 2;
+	groupID = 3;
+	chats = "chatss"
 	//db = require("./models/user.js"),
 	//collection = "users";
 	MongoClient = require("mongodb").MongoClient;
@@ -21,8 +22,6 @@ var express = require("express"),
 
 const app = express();
 const mongoOptions = {useNewUrlParser : true};
-//mongoose.connect("mongodb://localhost/groupee");
-//User.getDB();
 
 //database connection part start  //////////////////////////////////////////
 mongoose.connect('mongodb://localhost:27017/groupee' , { useNewUrlParser: true });
@@ -51,9 +50,11 @@ const schema = Joi.object().keys({
 app.use(bodyParser.json());
 
 passport.use(new LocalStrategy(User.authenticate()));
+
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
+passport.serializeUser(Group.serializeUser());
+passport.deserializeUser(Group.deserializeUser());
 app.use(express.static(__dirname + '/views'));
 
 // app.get("/profile", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
@@ -72,43 +73,80 @@ app.get("/grouphome", function(req, res){
 	res.render("grouphome");
 });
 
+
+// //experiment code to create new group
+// app.post('/grouphome', function(req, res, next) {
+// 	console.log(userprofile+ " is trying to create a group");
+// 	req.body.groupName
+// 	req.body.type
+// 	req.body.objective
+// 	groupID = 1
+// 	adminName = userprofile
+// 	userID = 1
+// 	chats = "null"
+// 	mongoose.connect('mongodb://localhost:27017/groupee' , { useNewUrlParser: true }, function(err, client) {
+// 	  if(err){ 
+// 		  throw err;  
+// 		}
+// 		var db = client.db('groupee');
+// 	  	var collection = db.collection('groups');
+// 	  	var inputs = {  
+// 		  	groupName: req.body.groupName, 
+// 			type: req.body.type, 
+// 			objective: req.body.objective,
+// 			groupID : 	groupID+2,
+// 			adminName : userprofile,
+// 			userID :  userID+2,
+// 			chats : chats, 
+// 		};
+// 	  collection.insert(inputs, function(err, result) {
+// 	  if(err) { throw err; }
+// 		console.log(result);
+// 		client.close();
+// 		res.render('profile', {
+// 			'infos': userprofile
+// 		});   
+// 	});
+// 	});
+//   });
+
 //handling Group Creation the Logical Part
 app.post("/grouphome", function(req, res){
 	console.log(userprofile+ " is trying to create a group");
-	req.body.groupName
-	req.body.type
-	req.body.objective
-	groupID = 1
-	adminName = userprofile
-	userID = 1
-	chats = null
-	Group.grouphome(new Group({
-		groupName: req.body.groupName, 
-		type: req.body.type, 
-		objective: req.body.objective,
-		groupID : 	groupID,
-		adminName : userprofile,
-		userID :  userID,
-		chats : chats,  
-		}), 
-		function(err, group){ //use of middleware
-			if(err){
-				console.log(err);
-				return res.render('grouphome');
-			}
-			(req, res, function(){
-				res.render("profile", {
-					'infos': adminName
-				});
-			console.log("new group created "+ req.body.groupName);
-			console.log( userprofile+ " created "+ req.body.groupName);
-		});
-	});
+	var groupinfo = new Group({ //You're entering a new bug here, giving it a name, and specifying it's type.
+	groupName: req.body.groupName, 
+	type: req.body.type, 
+	objective: req.body.objective,
+	groupID : 	groupID,
+	adminName : userprofile,
+	userID :  userID,
+	chats : chats,
+ 	});
+	// Group.grouphome(new group({
+	// 	groupName: req.body.groupName, 
+	// 	type: req.body.type, 
+	// 	objective: req.body.objective,
+	// 	groupID : 	groupID,
+	// 	adminName : userprofile,
+	// 	userID :  userID,
+	// 	chats : chats,  
+	// 	}).
+	groupinfo.save(function(error) {
+		console.log("Your bee has been saved!");
+		if (error) {
+	    console.error(error);
+		 }
+		else{
+			res.render("profile", {
+				'infos': userprofile
+			});
+		}});
+	console.log(userprofile+ " is trying to create a group");
 });
 
 
 app.get("/secret", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
-	res.render("secret");
+	res.render("secrets");
 });
 
 //handling user signup the View Rendering Part

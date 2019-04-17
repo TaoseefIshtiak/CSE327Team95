@@ -8,19 +8,22 @@ const MongoClient = require("mongodb").MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 
 // location of where our mongoDB database is located
-const url = "mongodb://localhost:27017";
-
-// Options for mongoDB
-const mongoOptions = {useNewUrlParser : true};
-
+mongoose.connect("mongodb://localhost:27017/groupee"); //Test is the database name. 
+ 
+var db = mongoose.connection;
+ 
+db.on("error", console.error.bind(console, "Connection error:"));
+db.once("open", function(callback){
+console.log("Connection to database Succeeded."); /* Once the database connection has succeeded, the code in db.once is executed. */
+});
 
 var GroupSchema = new mongoose.Schema({
 	groupName : String,
 	type : String,
 	objective : String,
-	groupID : Number,
+	groupID : String,
 	adminName : String,
-	userID : Number,
+	userID : String,
 	chats : String,
 });
 

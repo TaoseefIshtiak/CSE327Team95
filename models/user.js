@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 
-mongoose.connect('mongodb://localhost:27017/groupee' , { useNewUrlParser: true });
+//mongoose.connect('mongodb://localhost:27017/groupee' , { useNewUrlParser: true });
 
 var passportLocalMongoose = require("passport-local-mongoose");
 const MongoClient = require("mongodb").MongoClient;
@@ -30,6 +30,8 @@ var UserSchema = new mongoose.Schema({
 	//toDos: String,
 	//dateTime: Date
 });
+
+
 
 
 // returns OBJECTID object used to 
