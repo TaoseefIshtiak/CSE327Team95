@@ -9,9 +9,10 @@ var express = require("express"),
 	path = require('path'),
 	Joi = require('joi'),
 	dburl = "mongodb://localhost:27017",
-	userprofile =  null;
-	userID = 2;
-	groupID = 3;
+	userprofile =  null,
+	//profilename = null,
+	userID = 2,
+	groupID = 3,
 	chats = "chatss"
 	//db = require("./models/user.js"),
 	//collection = "users";
@@ -53,8 +54,6 @@ passport.use(new LocalStrategy(User.authenticate()));
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-passport.serializeUser(Group.serializeUser());
-passport.deserializeUser(Group.deserializeUser());
 app.use(express.static(__dirname + '/views'));
 
 // app.get("/profile", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
@@ -146,7 +145,7 @@ app.post("/grouphome", function(req, res){
 
 
 app.get("/secret", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
-	res.render("secrets");
+	res.render("secret");
 });
 
 //handling user signup the View Rendering Part
@@ -192,6 +191,7 @@ app.post("/login", function(req, res){
 	req.body.username
 	req.body.password
 	userprofile = req.body.username
+	//profilename = userprofile
 	passport.authenticate("local")(req, res, function(){
 		res.render("profile", {
 			'infos': req.body.username
@@ -235,9 +235,9 @@ app.get('/myToDos', function(req, res) {
 		  return
 		}
 		else{
-			const db = client.db('groupee');
-			const collection = db.collection('users');
-			collection.find().toArray((err, items) => {
+			const dbToDos = client.db('groupee');
+			const collectiondbToDos = dbToDos.collection('users');
+			collectiondbToDos.find().toArray((err, items) => {
 				// res.render('todos', {
 				// 	infos: items
 				// });

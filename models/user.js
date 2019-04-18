@@ -1,17 +1,14 @@
 var mongoose = require("mongoose");
 
-//mongoose.connect('mongodb://localhost:27017/groupee' , { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost:27017/groupee' , { useNewUrlParser: true });
 
 var passportLocalMongoose = require("passport-local-mongoose");
 const MongoClient = require("mongodb").MongoClient;
 
 const ObjectID = require('mongodb').ObjectID;
 
-// location of where our mongoDB database is located
-const url = "mongodb://localhost:27017";
 
-// Options for mongoDB
-const mongoOptions = {useNewUrlParser : true};
+
 
 
 var UserSchema = new mongoose.Schema({

@@ -6,9 +6,6 @@ var passportLocalMongoose = require("passport-local-mongoose");
 const MongoClient = require("mongodb").MongoClient;
 
 const ObjectID = require('mongodb').ObjectID;
-
-// location of where our mongoDB database is located
-mongoose.connect("mongodb://localhost:27017/groupee"); //Test is the database name. 
  
 var db = mongoose.connection;
  
@@ -39,3 +36,5 @@ const getPrimaryKey = (_id)=>{
 GroupSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model("group", GroupSchema);
+
+db.close();
