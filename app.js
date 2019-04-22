@@ -226,6 +226,7 @@ function isLoggedIn(req, res, next){
 }
 
 
+/////////////code for todo list section/////////////
 //todo list read
 app.get('/myToDos', function(req, res) {
 	
@@ -250,19 +251,6 @@ app.get('/myToDos', function(req, res) {
 		}
 	  });
     
-});
-
-
-// app.get("/profile", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
-// 	res.render("profile");
-// });
-
-//experiment code
-app.get('/profile', isLoggedIn, function(req, res){
-	res.render("profile", {
-	'infos': userprofile
-		});
-		console.log("welcome "+ userprofile);
 });
 
 // // read
@@ -295,7 +283,6 @@ app.put('/:id',(req,res)=>{
         }      
     });
 });
-
 
 //create
 app.post('/',(req,res,next)=>{
@@ -349,6 +336,20 @@ app.use((err,req,res,next)=>{
         }
     });
 })
+
+
+// app.get("/profile", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
+// 	res.render("profile");
+// });
+
+//experiment code ---> working
+app.get('/profile', isLoggedIn, function(req, res){
+	res.render("profile", {
+	'infos': userprofile
+		});
+		console.log("welcome "+ userprofile);
+});
+
 
 var server = app.listen(5000, function(){
 	console.log("server has started on port 5000");	
