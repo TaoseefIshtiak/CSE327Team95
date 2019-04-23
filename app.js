@@ -285,32 +285,85 @@ app.put('/:id',(req,res)=>{
 });
 
 //create
-app.post('/',(req,res,next)=>{
-    // Document to be inserted
-    const userInput = req.body;
 
-    // Validate document
-    // If document is invalid pass to error middleware
-    // else insert document within todo collection
-    Joi.validate(userInput,schema,(err,result)=>{
-        if(err){
-            const error = new Error("Invalid Input");
-            error.status = 400;
-            next(error);
-        }
-        else{
-            db.getDB().collection(collection).insertOne(userInput,(err,result)=>{
-                if(err){
-                    const error = new Error("Failed to insert Todo Document");
-                    error.status = 400;
-                    next(error);
-                }
-                else
-                    res.json({result : result, document : result.ops[0],msg : "Successfully inserted Todo!!!",error : null});
-            });
-        }
-    })    
+app.post("/myTodos", function(req, res){
+	console.log(userprofile+ " is trying to create a group");
+	var groupinfo = new Group({ //You're entering a new bug here, giving it a name, and specifying it's type.
+	groupName: req.body.groupName, 
+	type: req.body.type, 
+	objective: req.body.objective,
+	groupID : 	groupID,
+	adminName : userprofile,
+	userID :  userID,
+	chats : chats,
+ 	});
+	// Group.grouphome(new group({
+	// 	groupName: req.body.groupName, 
+	// 	type: req.body.type, 
+	// 	objective: req.body.objective,
+	// 	groupID : 	groupID,
+	// 	adminName : userprofile,
+	// 	userID :  userID,
+	// 	chats : chats,  
+	// 	}).
+	groupinfo.save(function(error) {
+		console.log("Your bee has been saved!");
+		if (error) {
+	    console.error(error);
+		}
+		else{
+			console.log(userprofile+ " inserted his todo");
+		}
+		MongoClient.connect(url, (err, client) => {
+			if (err) {
+			  console.error(err)
+			  return
+			}
+			else{
+				const dbToDos = client.db('groupee');
+				const collectiondbToDos = dbToDos.collection('users');
+				collectiondbToDos.find().toArray((err, items) => {
+					// res.render('todos', {
+					// 	infos: items
+					// });
+					// console.log(items)
+					Infos = items;
+					//var parseVal = JSON.parse(items);
+					 console.log(items);
+					res.render('todo', {'infos': items});
+				  });
+			}
+		  });
+	});
 });
+
+
+// app.post('/',(req,res,next)=>{
+//     // Document to be inserted
+//     const userInput = req.body;
+
+//     // Validate document
+//     // If document is invalid pass to error middleware
+//     // else insert document within todo collection
+//     Joi.validate(userInput,schema,(err,result)=>{
+//         if(err){
+//             const error = new Error("Invalid Input");
+//             error.status = 400;
+//             next(error);
+//         }
+//         else{
+//             db.getDB().collection(collection).insertOne(userInput,(err,result)=>{
+//                 if(err){
+//                     const error = new Error("Failed to insert Todo Document");
+//                     error.status = 400;
+//                     next(error);
+//                 }
+//                 else
+//                     res.json({result : result, document : result.ops[0],msg : "Successfully inserted Todo!!!",error : null});
+//             });
+//         }
+//     })    
+// });
 
 
 
