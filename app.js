@@ -229,7 +229,7 @@ function isLoggedIn(req, res, next){
 //todo list read
 app.get('/myToDos', function(req, res) {
 	
-	MongoClient.connect(url, (err, client) => {
+	MongoClient.connect(dburl, (err, client) => {
 		if (err) {
 		  console.error(err)
 		  return
