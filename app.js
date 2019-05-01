@@ -3,7 +3,8 @@ var express = require("express"),
 	passport = require("passport"),
 	bodyParser = require("body-parser"),
 	User = require("./models/user"),
-	Group = require("./models/group"),	
+	Group = require("./models/group"),
+	Post = require("./models/post"),	
 	LocalStrategy = require("passport-local"),
 	passportLocalMongoose = require("passport-local-mongoose"),
 	path = require('path'),
@@ -141,6 +142,53 @@ app.post("/grouphome", function(req, res){
 			});
 		}});
 	console.log(userprofile+ " is trying to create a group");
+});
+
+//creating user post -------->
+app.get("/createPost", isLoggedIn, function(req, res){
+	MongoClient.connect(dburl, (err, client) => {
+		if (err) {
+		  console.error(err)
+		  return
+		}
+		else{
+			const dbPosts = client.db('groupee');
+			const collectiondbPosts = dbPosts.collection('posts');
+			collectiondbPosts.find().toArray((err, items) => {
+				// res.render('todos', {
+				// 	infos: items
+				// });
+				// console.log(items)
+				Infos = items;
+				//var parseVal = JSON.parse(items);
+         		console.log(items);
+            	res.render('group', {'infos': items});
+			  });
+		}
+	  });
+});
+
+
+app.post("/createPost", function(req, res){
+	console.log(userprofile+ " is trying to create a User post");
+	var postinfo = new Post({ //You're entering a new bug here, giving it a name, and specifying it's type.
+	post : req.body.post,
+	createdby: userprofile,
+	postID : 1,
+    poll: null,
+	pollID : 1,
+	postDateTime : "1.5.19",
+ 	});
+	postinfo.save(function(error) {
+		console.log("Your post has been saved!");
+		if (error) {
+	    console.error(error);
+		 }
+		else{
+			res.render("profile", {
+				'infos': userprofile
+			});
+		}});
 });
 
 
