@@ -125,15 +125,6 @@ app.post("/grouphome", function(req, res){
 	userID :  userID,
 	chats : chats,
  	});
-	// Group.grouphome(new group({
-	// 	groupName: req.body.groupName, 
-	// 	type: req.body.type, 
-	// 	objective: req.body.objective,
-	// 	groupID : 	groupID,
-	// 	adminName : userprofile,
-	// 	userID :  userID,
-	// 	chats : chats,  
-	// 	}).
 	groupinfo.save(function(error) {
 		console.log("Your bee has been saved!");
 		if (error) {
@@ -254,16 +245,6 @@ app.post("/login", function(req, res){
 	failureRedirect: "/login"
 }));
 
-
-
-// //handling user signup the Logical Part
-// app.post("/login", passport.authenticate("local", {
-// 	successRedirect: "/secret",
-// 	failureRedirect: "/login"
-// })	, function(req, res){
-// console.log("Login Sucessful");
-// });
-
 app.get("/logout", function(req, res){
 	req.logout(); 	//use of facade design pattern
 	res.redirect("/");
@@ -294,31 +275,9 @@ app.post("/myToDos", function(req, res){
 	    console.error(error);
 		}
 		else{
-			console.log(userprofile+ " inserted his todo");
+			console.log(userprofile+ " inserted his new todo " +req.body.todo);
 			res.render("secret");
 		}
-		// MongoClient.connect(dburl, (err, client) => {
-		// 	if (err) {
-		// 	  console.error(err)
-		// 	  return
-		// 	}
-		// 	else{
-		// 		const dbToDos = client.db('groupee');
-		// 		const collectiondbToDos = dbToDos.collection('todos');
-		// 		collectiondbToDos.find().toArray((err, items) => {
-		// 			Infos = items;
-		// 			for (var i = 0; i < items.length; i++) { 
-		// 				if(items[i].username == userprofile){
-		// 					console.log(items[i].username + " you are trying to read information of " + items[i]._id + items[i].todos);
-		// 					todo_id = items[i]._id;
-		// 					res.render('todo', {'infos': items[i],
-		// 											viewTitle: "Update todo"});
-		// 					console.log(items[i].todos+ " ");
-		// 				}
-		// 			}
-		// 		  });
-		// 	}
-		//   });
 	});
 });
 
