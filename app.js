@@ -4,7 +4,8 @@ var express = require("express"),
 	bodyParser = require("body-parser"),
 	User = require("./models/user"),
 	Group = require("./models/group"),
-	Post = require("./models/post"),	
+	Post = require("./models/post"),
+	Todo = require("./models/todo"),	
 	LocalStrategy = require("passport-local"),
 	passportLocalMongoose = require("passport-local-mongoose"),
 	path = require('path'),
@@ -12,6 +13,7 @@ var express = require("express"),
 	dburl = "mongodb://localhost:27017",
 	userprofile =  null,
 	usr_id = null,
+	todo_id = null,
 	//profilename = null,
 	userID = 2,
 	groupID = 3,
@@ -277,6 +279,56 @@ function isLoggedIn(req, res, next){
 
 /////////////code for todo list section/////////////
 //todo list read
+
+//create
+
+app.post("/myToDos", function(req, res){
+	console.log(userprofile+ " is trying to create a todo");
+	var todoinfo = new Todo({ //You're entering a new bug here, giving it a name, and specifying it's type.
+	createdby: userprofile,
+    todoList : req.body.todo,
+ 	});
+	todoinfo.save(function(error) {
+		console.log("Your todo has been saved!");
+		if (error) {
+	    console.error(error);
+		}
+		else{
+			console.log(userprofile+ " inserted his todo");
+			res.render("secret");
+		}
+		// MongoClient.connect(dburl, (err, client) => {
+		// 	if (err) {
+		// 	  console.error(err)
+		// 	  return
+		// 	}
+		// 	else{
+		// 		const dbToDos = client.db('groupee');
+		// 		const collectiondbToDos = dbToDos.collection('todos');
+		// 		collectiondbToDos.find().toArray((err, items) => {
+		// 			Infos = items;
+		// 			for (var i = 0; i < items.length; i++) { 
+		// 				if(items[i].username == userprofile){
+		// 					console.log(items[i].username + " you are trying to read information of " + items[i]._id + items[i].todos);
+		// 					todo_id = items[i]._id;
+		// 					res.render('todo', {'infos': items[i],
+		// 											viewTitle: "Update todo"});
+		// 					console.log(items[i].todos+ " ");
+		// 				}
+		// 			}
+		// 		  });
+		// 	}
+		//   });
+	});
+});
+
+
+//handling user login the View Rendering Part
+
+// app.get("/myToDos", function(req, res){
+// 	res.render("todo");
+// });
+
 app.get('/myToDos', function(req, res) {
 	
 	MongoClient.connect(dburl, (err, client) => {
@@ -286,21 +338,76 @@ app.get('/myToDos', function(req, res) {
 		}
 		else{
 			const dbToDos = client.db('groupee');
-			const collectiondbToDos = dbToDos.collection('users');
+			const collectiondbToDos = dbToDos.collection('todos');
 			collectiondbToDos.find().toArray((err, items) => {
-				// res.render('todos', {
-				// 	infos: items
-				// });
-				// console.log(items)
 				Infos = items;
-				//var parseVal = JSON.parse(items);
-         		console.log(items);
-            	res.render('todo', {'infos': items});
+				console.log(items);
+				for (var i = 0; i < items.length; i++) { 
+					if(items[i].createdby == userprofile){
+						console.log(items[i].createdby + " you are trying to read information of " + items[i]._id + items[i].todoList);
+						todo_id = items[i]._id;
+						console.log(items[i]._id);
+						res.render('todo', {'infos': items,
+												viewTitle: "Update todo"});
+						console.log(items[i].todoList);
+					}
+				}
 			  });
 		}
 	  });
     
 });
+
+
+// //profile view section for todo list updataion
+// app.post('/profile', (req, res) => {
+//     updateRecord(req, res);
+// });
+
+
+// function updateRecord(req, res) {
+// 	console.log(req.body._id);
+//     User.findOneAndUpdate({ _id: usr_id }, req.body, { new: true }, (err, doc) => {
+//         if (!err){ 
+// 			res.redirect('secret'); 
+// 		}
+//         else {
+//             if (err.name == 'ValidationError') {
+//                 // handleValidationError(err, req.body);
+//                 res.render("profile", {
+//                     viewTitle: 'Update Userinfo',
+//                     infos: req.body
+//                 });
+//             }
+//             else
+//                 console.log('Error during record update : ' + err);
+//         }
+//     });
+// }
+
+// app.get('/profile', isLoggedIn, function(req, res){
+// 	MongoClient.connect(dburl, (err, client) => {
+// 		if (err) {
+// 		  console.error(err)
+// 		  return
+// 		}
+// 		else{
+// 			const dbUserInfo = client.db('groupee');
+// 			const collectiondbUserInfo = dbUserInfo.collection('users');
+// 			collectiondbUserInfo.find().toArray((err, items) => {
+// 				Infos = items;
+// 				for (var i = 0; i < items.length; i++) { 
+// 					if(items[i].username == userprofile){
+// 						console.log(userprofile + "you are trying to read information of "+ items[i].username + items[i]._id);
+// 						usr_id = items[i]._id;
+// 						res.render('profile', {'infos': items[i],
+// 												viewTitle: "Update user"});
+// 					}
+// 				}
+// 			  });
+// 		}
+// 	  });
+// });
 
 // // read
 
@@ -333,58 +440,7 @@ app.put('/:id',(req,res)=>{
     });
 });
 
-//create
 
-app.post("/myTodos", function(req, res){
-	console.log(userprofile+ " is trying to create a group");
-	var groupinfo = new Group({ //You're entering a new bug here, giving it a name, and specifying it's type.
-	groupName: req.body.groupName, 
-	type: req.body.type, 
-	objective: req.body.objective,
-	groupID : 	groupID,
-	adminName : userprofile,
-	userID :  userID,
-	chats : chats,
- 	});
-	// Group.grouphome(new group({
-	// 	groupName: req.body.groupName, 
-	// 	type: req.body.type, 
-	// 	objective: req.body.objective,
-	// 	groupID : 	groupID,
-	// 	adminName : userprofile,
-	// 	userID :  userID,
-	// 	chats : chats,  
-	// 	}).
-	groupinfo.save(function(error) {
-		console.log("Your bee has been saved!");
-		if (error) {
-	    console.error(error);
-		}
-		else{
-			console.log(userprofile+ " inserted his todo");
-		}
-		MongoClient.connect(url, (err, client) => {
-			if (err) {
-			  console.error(err)
-			  return
-			}
-			else{
-				const dbToDos = client.db('groupee');
-				const collectiondbToDos = dbToDos.collection('users');
-				collectiondbToDos.find().toArray((err, items) => {
-					// res.render('todos', {
-					// 	infos: items
-					// });
-					// console.log(items)
-					Infos = items;
-					//var parseVal = JSON.parse(items);
-					 console.log(items);
-					res.render('todo', {'infos': items});
-				  });
-			}
-		  });
-	});
-});
 
 
 // app.post('/',(req,res,next)=>{
@@ -494,16 +550,6 @@ app.get('/profile', isLoggedIn, function(req, res){
 	  });
 });
 
-app.get('/:id', (req, res) => {
-    User.findById(req.params.userID, (err, items) => {
-        if (!err) {
-            res.render("profile", {
-                viewTitle: "Update User",
-                infos: items
-            });
-        }
-    });
-});
 
 
 var server = app.listen(5000, function(){

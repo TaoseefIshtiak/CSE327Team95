@@ -15,9 +15,8 @@
         <table class="table table-inverse">
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Username</th>
+                    <th>Things to do</th>
+        
           
                   </tr>
                 </thead>
@@ -26,9 +25,8 @@
                   <% for(var i=0; i < infos.length; i++) { %>
                  <tr>
           
-                   <td><%= infos[i].firstName %></td>
-                   <td><%= infos[i].eMail %></td>
-                   <td><%= infos[i].username %></td>
+                   <td><%= infos[i].todoList%></td>
+                   <td><button><a href = "/delete/<%= infos[i]._id %>"> Delete </a></button></td>
           
           
                  </tr>
@@ -38,11 +36,9 @@
               </table>
 
         <h1>Update your todos here</h1>
-        <form action="/grouphome" method="POST">
-            <input type = "text" name= "groupName" placeholder = "Name your group with a beautiful name">
-            <input type = "text" name= "type" placeholder = "Select your type">
-            <input type = "text" name= "objective" placeholder = "what is your objective behind creating this group??">
-            <button>Delete Todo</button>
+        <form action="/myToDos" method="POST">
+            <input type = "text" name= "todo" placeholder = "update your todo list">
+            <button>Add new Todo</button>
         </form>
        
 </body>
