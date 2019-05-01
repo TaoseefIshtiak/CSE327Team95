@@ -1,27 +1,9 @@
-<h1>User Profile Page</h1>
+<h1> User Update </h1>
 
-<table class="table table-inverse">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Username</th>
-          
-                  </tr>
-                </thead>
-          
-                <tbody>
-                  <!-- <% for(var i=0; i < infos.length; i++) { %>
-                 <tr>
-          
-                   <td><%= infos %></td>
-                   <td><%= infos[i].eMail %></td>
-                   <td><%= infos[i].username %></td>
-          
-          
-                 </tr>
-              <% } %> -->
-              <td><%= infos %></td>
-                </tbody>
-          
-              </table>
+<form action="/profile" method="POST">
+    <input type = "text" name= "firstName" placeholder = "firstName" value=<%= infos.firstName %>>
+    <input type = "text" name= "lastName" placeholder = "lastName" value=<%= infos.lastName %>>
+    <input type = "text" name= "username" placeholder = "username" value=<%= infos.username %>>
+    <input type = "text" name= "eMail" placeholder = "youName@domainName.com" value=<%= infos.eMail %>>
+    <button>Submit</button>
+</form>

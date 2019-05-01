@@ -395,12 +395,86 @@ app.use((err,req,res,next)=>{
 // 	res.render("profile");
 // });
 
-//experiment code ---> working
+//profile view section
+app.post('/profile', (req, res) => {
+    updateRecord(req, res);
+});
+
+
+// function insertRecord(req, res) {
+//     var employee = new Employee();
+//     employee.fullName = req.body.fullName;
+//     employee.email = req.body.email;
+//     employee.mobile = req.body.mobile;
+//     employee.city = req.body.city;
+//     employee.save((err, doc) => {
+//         if (!err)
+//             res.redirect('employee/list');
+//         else {
+//             if (err.name == 'ValidationError') {
+//                 handleValidationError(err, req.body);
+//                 res.render("employee/addOrEdit", {
+//                     viewTitle: "Insert Employee",
+//                     employee: req.body
+//                 });
+//             }
+//             else
+//                 console.log('Error during record insertion : ' + err);
+//         }
+//     });
+// }
+
+function updateRecord(req, res) {
+    User.findOneAndUpdate({ _id: userID }, req.body, { new: true }, (err, doc) => {
+        if (!err){ 
+			res.redirect('secret'); 
+		}
+        else {
+            if (err.name == 'ValidationError') {
+                // handleValidationError(err, req.body);
+                res.render("profile", {
+                    viewTitle: 'Update Userinfo',
+                    infos: req.body
+                });
+            }
+            else
+                console.log('Error during record update : ' + err);
+        }
+    });
+}
+
 app.get('/profile', isLoggedIn, function(req, res){
-	res.render("profile", {
-	'infos': userprofile
-		});
-		console.log("welcome "+ userprofile);
+	MongoClient.connect(dburl, (err, client) => {
+		if (err) {
+		  console.error(err)
+		  return
+		}
+		else{
+			const dbUserInfo = client.db('groupee');
+			const collectiondbUserInfo = dbUserInfo.collection('users');
+			collectiondbUserInfo.find().toArray((err, items) => {
+				Infos = items;
+				for (var i = 0; i < items.length; i++) { 
+					if(items[i].username == userprofile){
+						console.log(userprofile + "you are trying to read information of "+ items[i].username + items[i]._id);
+						res.render('profile', {'infos': items[i],
+												viewTitle: "Update user"});
+					}
+				}
+			  });
+		}
+	  });
+});
+
+app.get('/:id', (req, res) => {
+    User.findById(req.params.userID, (err, items) => {
+        if (!err) {
+            res.render("profile", {
+                viewTitle: "Update User",
+                infos: items
+            });
+        }
+    });
 });
 
 
