@@ -265,7 +265,7 @@ function isLoggedIn(req, res, next){
 
 app.post("/myToDos", function(req, res){
 	console.log(userprofile+ " is trying to create a todo");
-	var todoinfo = new Todo({ //You're entering a new bug here, giving it a name, and specifying it's type.
+	var todoinfo = new Todo({ 
 	createdby: userprofile,
     todoList : req.body.todo,
  	});
@@ -301,13 +301,14 @@ app.get('/myToDos', function(req, res) {
 			collectiondbToDos.find().toArray((err, items) => {
 				Infos = items;
 				console.log(items);
+				res.render('todo', {'infos': items,
+											viewTitle: "Update todo",
+											'profile': userprofile});
 				for (var i = 0; i < items.length; i++) { 
 					if(items[i].createdby == userprofile){
 						console.log(items[i].createdby + " you are trying to read information of " + items[i]._id + items[i].todoList);
 						todo_id = items[i]._id;
 						console.log(items[i]._id);
-						res.render('todo', {'infos': items,
-												viewTitle: "Update todo"});
 						console.log(items[i].todoList);
 					}
 				}

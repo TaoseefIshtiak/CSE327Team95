@@ -11,6 +11,7 @@
     <title>Todo Crud Application</title>
   </head>
   <body>
+        <h1> User todo list </h1>
 
         <table class="table table-inverse">
                 <thead>
@@ -24,10 +25,11 @@
                 <tbody>
                   <% for(var i=0; i < infos.length; i++) { %>
                  <tr>
+                     <% if(profile == infos[i].createdby){ %>
           
                    <td><%= infos[i].todoList%></td>
                    <td><button><a href = "/delete/<%= infos[i]._id %>"> Delete </a></button></td>
-          
+                 <% } %>
           
                  </tr>
               <% } %>
