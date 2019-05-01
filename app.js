@@ -11,6 +11,7 @@ var express = require("express"),
 	Joi = require('joi'),
 	dburl = "mongodb://localhost:27017",
 	userprofile =  null,
+	usr_id = null,
 	//profilename = null,
 	userID = 2,
 	groupID = 3,
@@ -449,31 +450,9 @@ app.post('/profile', (req, res) => {
 });
 
 
-// function insertRecord(req, res) {
-//     var employee = new Employee();
-//     employee.fullName = req.body.fullName;
-//     employee.email = req.body.email;
-//     employee.mobile = req.body.mobile;
-//     employee.city = req.body.city;
-//     employee.save((err, doc) => {
-//         if (!err)
-//             res.redirect('employee/list');
-//         else {
-//             if (err.name == 'ValidationError') {
-//                 handleValidationError(err, req.body);
-//                 res.render("employee/addOrEdit", {
-//                     viewTitle: "Insert Employee",
-//                     employee: req.body
-//                 });
-//             }
-//             else
-//                 console.log('Error during record insertion : ' + err);
-//         }
-//     });
-// }
-
 function updateRecord(req, res) {
-    User.findOneAndUpdate({ _id: userID }, req.body, { new: true }, (err, doc) => {
+	console.log(req.body._id);
+    User.findOneAndUpdate({ _id: usr_id }, req.body, { new: true }, (err, doc) => {
         if (!err){ 
 			res.redirect('secret'); 
 		}
@@ -505,6 +484,7 @@ app.get('/profile', isLoggedIn, function(req, res){
 				for (var i = 0; i < items.length; i++) { 
 					if(items[i].username == userprofile){
 						console.log(userprofile + "you are trying to read information of "+ items[i].username + items[i]._id);
+						usr_id = items[i]._id;
 						res.render('profile', {'infos': items[i],
 												viewTitle: "Update user"});
 					}
@@ -529,3 +509,28 @@ app.get('/:id', (req, res) => {
 var server = app.listen(5000, function(){
 	console.log("server has started on port 5000");	
 });
+
+
+
+// function insertRecord(req, res) {
+//     var employee = new Employee();
+//     employee.fullName = req.body.fullName;
+//     employee.email = req.body.email;
+//     employee.mobile = req.body.mobile;
+//     employee.city = req.body.city;
+//     employee.save((err, doc) => {
+//         if (!err)
+//             res.redirect('employee/list');
+//         else {
+//             if (err.name == 'ValidationError') {
+//                 handleValidationError(err, req.body);
+//                 res.render("employee/addOrEdit", {
+//                     viewTitle: "Insert Employee",
+//                     employee: req.body
+//                 });
+//             }
+//             else
+//                 console.log('Error during record insertion : ' + err);
+//         }
+//     });
+// }
