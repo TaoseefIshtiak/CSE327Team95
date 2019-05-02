@@ -188,7 +188,11 @@ app.post("/createPost",upload.single('postFile'), function(req, res){
     		poll: null,
 			pollID : 1,
 			postDateTime : Date.now(),
+<<<<<<< HEAD
 			fileName : req.file.filename,
+=======
+			fileName : req.file.filename
+>>>>>>> 7aa266a34b57b397e2f182c97231a6ed045c77df
 			originalName : req.file.originalname
  		});
 	}
@@ -202,6 +206,7 @@ app.post("/createPost",upload.single('postFile'), function(req, res){
 			postDateTime : Date.now()
  		});
 	}
+
 	postinfo.save(function(error) {
 		console.log("Your post has been saved!");
 		if (error) {
