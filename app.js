@@ -171,7 +171,7 @@ app.get("/createPost", isLoggedIn, function(req, res){
             	res.render('group', {'infos': items});
 			  });
 		}
-	  });
+	});
 });
 
 
@@ -200,17 +200,34 @@ app.post("/createPost",upload.single('postFile'), function(req, res){
 			postDateTime : Date.now()
  		});
 	}
-
 	postinfo.save(function(error) {
-		console.log("Your post has been saved!");
 		if (error) {
 	    console.error(error);
 		 }
 		else{
-			res.render("profile", {
-				'infos': userprofile
-			});
-		}});
+			console.log("Your post has been saved!");
+		}
+	});
+	MongoClient.connect(dburl, (err, client) => {
+		if (err) {
+		  console.error(err)
+		  return
+		}
+		else{
+			const dbPosts = client.db('groupee');
+			const collectiondbPosts = dbPosts.collection('posts');
+			collectiondbPosts.find().toArray((err, items) => {
+				// res.render('todos', {
+				// 	infos: items
+				// });
+				// console.log(items)
+				Infos = items;
+				//var parseVal = JSON.parse(items);
+         		console.log(items);
+            	res.render('group', {'infos': items});
+			  });
+		}
+	});
 });
 
 
@@ -266,6 +283,7 @@ app.get('/download/:file(*)',(req, res) => {
 
 app.get('/group/:group(*)',(req,res) => {
 	var groupID = req.params.group;
+	console.log(groupID);
 	MongoClient.connect(dburl, (err, client) => {
 		if (err) {
 		  console.error(err)
@@ -273,8 +291,8 @@ app.get('/group/:group(*)',(req,res) => {
 		}
 		else{
 			const dbPosts = client.db('groupee');
-			const collectiondbPosts = dbPosts.collection('groups');
-			if(collectiondbPosts.find(groupID)){
+			const collectiondbGroups = dbPosts.collection('groups');
+			if(collectiondbGroups.find(groupID)){
 				res.render('invite',{'groupID':groupID});
 			}
 			else{
@@ -337,7 +355,31 @@ app.post("/myToDos", function(req, res){
 		}
 		else{
 			console.log(userprofile+ " inserted his new todo " +req.body.todo);
-			res.render("secret");
+		}
+	});
+	MongoClient.connect(dburl, (err, client) => {
+		if (err) {
+		  console.error(err)
+		  return
+		}
+		else{
+			const dbToDos = client.db('groupee');
+			const collectiondbToDos = dbToDos.collection('todos');
+			collectiondbToDos.find().toArray((err, items) => {
+				Infos = items;
+				console.log(items);
+				res.render('todo', {'infos': items,
+											viewTitle: "Update todo",
+											'profile': userprofile});
+				for (var i = 0; i < items.length; i++) { 
+					if(items[i].createdby == userprofile){
+						console.log(items[i].createdby + " you are trying to read information of " + items[i]._id + items[i].todoList);
+						todo_id = items[i]._id;
+						console.log(items[i]._id);
+						console.log(items[i].todoList);
+					}
+				}
+			  });
 		}
 	});
 });
@@ -375,7 +417,7 @@ app.get('/myToDos', function(req, res) {
 				}
 			  });
 		}
-	  });
+	});
     
 });
 

@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -10,8 +9,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
     <title>Todo Crud Application</title>
+    <link rel="stylesheet" href="test.css">
   </head>
-  <body>
+  <body background="dd.jpg">
         <h1> User todo list </h1>
 
         <table class="table table-inverse">
@@ -29,7 +29,7 @@
                      <% if(profile == infos[i].createdby){ %>
           
                    <td><%= infos[i].todoList%></td>
-                   <td><button><a href = "/deletemyToDos/<%= infos[i]._id %>"> Delete </a></button></td>
+                   <td><button><a href = "/delete/<%= infos[i]._id %>"> Delete </a></button></td>
                  <% } %>
           
                  </tr>
@@ -44,5 +44,5 @@
             <button>Add new Todo</button>
         </form>
        
-</body>
+
 </html>

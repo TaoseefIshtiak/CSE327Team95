@@ -15,9 +15,9 @@
 <h1>welcome to your new group</h1>
 
 <form action="/createPost" enctype="multipart/form-data" method="POST">
-    <input type = "text" name= "post" placeholder = "What's on your mind??">
+    <input type = "textarea" name= "post" placeholder = "What's on your mind??">
     <input type="file" name="postFile" />
-    <button>Create Group</button>
+    <button>Create Post</button>
 </form>
 
         <table class="table table-inverse">
@@ -26,6 +26,7 @@
                     <th>Post</th>
                     <th>Created by</th>
                     <th>Created on</th>
+                    <th>Uploaded File</th>
           
                   </tr>
                 </thead>
