@@ -70,6 +70,7 @@ app.get("/", function(req, res){
 });
 
 
+<<<<<<< HEAD
 //createGroup
 
 app.get("/grouphome", function(req, res){
@@ -187,6 +188,9 @@ app.post("/createPost", function(req, res){
 
 
 app.get("/secret", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
+=======
+app.get("/secret", isLoggedIn, function(req, res){
+>>>>>>> LoginAndReg
 	res.render("secret");
 });
 
@@ -201,6 +205,7 @@ app.post("/register", function(req, res){
 	req.body.lastName
 	req.body.username
 	req.body.eMail
+<<<<<<< HEAD
 	req.body.password
 	User.register(new User({
 		firstName: req.body.firstName, 
@@ -209,13 +214,30 @@ app.post("/register", function(req, res){
 		eMail: req.body.eMail, 
 	}), 
 	req.body.password, function(err, user){ //use of middleware
+=======
+	req.body.avatar
+	req.body.password
+	User.register(new User({
+		// firstName: req.body.firstName, 
+		// lastName: req.body.lastName, 
+		username: req.body.username, 
+		// eMail: req.body.eMail, 
+		// avatar: req.body.avatar
+	}), 
+	req.body.password, function(err, user){
+>>>>>>> LoginAndReg
 		if(err){
 			console.log(err);
 			return res.render('register');
 		}
 		passport.authenticate("local")(req, res, function(){
+<<<<<<< HEAD
 			res.render("profile", {
 				'infos': req.body.username
+=======
+			res.render("/profile", {
+				// list: docs
+>>>>>>> LoginAndReg
 			});
 			console.log("User account creation successful for "+ req.body.username);
 			console.log("a new user added to the users collection");
@@ -398,6 +420,29 @@ app.put('/:id',(req,res)=>{
             res.json(result);
         }      
     });
+});
+
+app.get("/logout", function(req, res){
+	req.logout();
+	res.redirect("/");
+});
+
+function isLoggedIn(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	}
+	res.redirect("/login");
+}
+
+//user profile creation logical part
+app.get("/user/:username", function(req, res){
+	User.findById(req.params.username, function(err, foundUser){
+		if(err){
+			console.log(err, "something went wrong");
+			return res.render('register');
+		}
+		res.redirect("/profile", {user: foundUser});
+	});
 });
 
 
