@@ -1,0 +1,32 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Profile Page</title>
+	<link rel="stylesheet" href="stylepro.css">
+	<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <h1> <%= viewTitle %> </h1>
+    <div class="profile">
+        <div class="title">
+        <h1>My Profile</h1>
+        </div>
+        <div class="main-container">
+                <form action="/editProfile" method="POST">
+                <input type = "text" name= "firstName" placeholder = "firstName" value=<%= infos.firstName %>>
+                <input type = "text" name= "lastName" placeholder = "lastName" value=<%= infos.lastName %>>
+                <input type = "text" name= "username" placeholder = "username" value=<%= infos.username %>>
+                <input type = "text" name= "eMail" placeholder = "youName@domainName.com" value=<%= infos.eMail %>>
+                <button>Submit</button>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

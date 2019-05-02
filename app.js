@@ -497,7 +497,7 @@ app.use((err,req,res,next)=>{
 // });
 
 //profile view section
-app.post('/profile', (req, res) => {
+app.post('/editProfile', (req, res) => {
     updateRecord(req, res);
 });
 
@@ -546,6 +546,29 @@ app.get('/profile', isLoggedIn, function(req, res){
 	  });
 });
 
+app.get('/editProfile', isLoggedIn, function(req, res){
+	MongoClient.connect(dburl, (err, client) => {
+		if (err) {
+		  console.error(err)
+		  return
+		}
+		else{
+			const dbUserInfo = client.db('groupee');
+			const collectiondbUserInfo = dbUserInfo.collection('users');
+			collectiondbUserInfo.find().toArray((err, items) => {
+				Infos = items;
+				for (var i = 0; i < items.length; i++) { 
+					if(items[i].username == userprofile){
+						console.log(userprofile + "you are trying to read information of "+ items[i].username + items[i]._id);
+						usr_id = items[i]._id;
+						res.render('profileedit', {'infos': items[i],
+												viewTitle: "Updated your profile"});
+					}
+				}
+			  });
+		}
+	  });
+});
 
 
 var server = app.listen(5000, function(){
