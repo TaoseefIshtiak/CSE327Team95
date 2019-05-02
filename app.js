@@ -189,6 +189,7 @@ app.post("/createPost",upload.single('postFile'), function(req, res){
 			pollID : 1,
 			postDateTime : Date.now(),
 			fileName : req.file.filename
+			originalName : req.file.originalname
  		});
 	}
 	else {
@@ -201,6 +202,7 @@ app.post("/createPost",upload.single('postFile'), function(req, res){
 			postDateTime : Date.now()
  		});
 	}
+
 	postinfo.save(function(error) {
 		console.log("Your post has been saved!");
 		if (error) {
