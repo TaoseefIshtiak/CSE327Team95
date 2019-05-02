@@ -12,7 +12,6 @@ const ObjectID = require('mongodb').ObjectID;
 
 
 var UserSchema = new mongoose.Schema({
-<<<<<<< HEAD
 	// userID: {
 	// 	type: Number,
 	// 	autoIncreament: true,
@@ -27,22 +26,6 @@ var UserSchema = new mongoose.Schema({
 	//avatar: String,
 	//toDos: String,
 	//dateTime: Date
-=======
-	userID: {
-		type: Number,
-		autoIncreament: true,
-		primaryKey: true
-	},
-	firstName: String,
-	lastName: String,
-	email: String,
-	phoneNo: String,
-	userName: String,
-	password: String,
-	avatar: String,
-	tasks: String,
-	dateTime: Date
->>>>>>> LoginAndReg
 });
 
 

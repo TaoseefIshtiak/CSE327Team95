@@ -192,7 +192,7 @@ app.get("/secret", isLoggedIn, function(req, res){  //using middleware and a fac
 
 //handling user signup the View Rendering Part
 app.get("/register", function(req, res){
-	res.render("register");
+	res.render("Firstpage");
 });
 
 //handling user signup the Logical Part
@@ -211,7 +211,7 @@ app.post("/register", function(req, res){
 	req.body.password, function(err, user){ //use of middleware
 		if(err){
 			console.log(err);
-			return res.render('register');
+			return res.render('Firstpage');
 		}
 		passport.authenticate("local")(req, res, function(){
 			res.render("profile", {
@@ -225,7 +225,7 @@ app.post("/register", function(req, res){
 
 //handling user login the View Rendering Part
 app.get("/login", function(req, res){
-	res.render("login");
+	res.render("Firstpage");
 });
 
 //handling user login the Logical Part
