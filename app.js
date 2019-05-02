@@ -188,7 +188,8 @@ app.post("/createPost",upload.single('postFile'), function(req, res){
     		poll: null,
 			pollID : 1,
 			postDateTime : Date.now(),
-			fileName : req.file.filename
+			fileName : req.file.filename,
+			originalName : req.file.originalname
  		});
 	}
 	else {
@@ -344,6 +345,15 @@ app.get('/myToDos', function(req, res) {
 		}
 	  });
     
+});
+
+app.get('/deletemyToDos/:id', (req, res) => {
+    Todo.findByIdAndRemove(req.params.id, (err, doc) => {
+        if (!err) {
+            res.redirect('secret');
+        }
+        else { console.log('Error in employee delete :' + err); }
+    });
 });
 
 
