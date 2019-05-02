@@ -25,7 +25,7 @@ var express = require("express"),
 	
 
 
-
+const path = require('path');
 const app = express();
 const mongoOptions = {useNewUrlParser : true};
 
@@ -257,6 +257,15 @@ app.post("/register", function(req, res){
 app.get("/login", function(req, res){
 	res.render("Firstpage");
 });
+
+app.get('/download/:file(*)',(req, res) => {
+  var file = req.params.file;
+  var fileLocation = path.join('./data',file);
+  res.download(fileLocation, file);
+  res.render("group"); 
+});
+
+
 
 //handling user login the Logical Part
 app.post("/login", function(req, res){
