@@ -24,8 +24,6 @@ var express = require("express"),
 	MongoClient = require("mongodb").MongoClient;
 	
 
-
-const path = require('path');
 const app = express();
 const mongoOptions = {useNewUrlParser : true};
 
@@ -188,7 +186,7 @@ app.post("/createPost",upload.single('postFile'), function(req, res){
     		poll: null,
 			pollID : 1,
 			postDateTime : Date.now(),
-			fileName : req.file.filename
+			fileName : req.file.filename,
 			originalName : req.file.originalname
  		});
 	}
@@ -262,7 +260,6 @@ app.get('/download/:file(*)',(req, res) => {
   var file = req.params.file;
   var fileLocation = path.join('./data',file);
   res.download(fileLocation, file);
-  res.render("group"); 
 });
 
 
