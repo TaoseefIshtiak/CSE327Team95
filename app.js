@@ -262,8 +262,33 @@ app.get('/download/:file(*)',(req, res) => {
   res.download(fileLocation, file);
 });
 
+//Invite Member Starts
 
+app.get('/group/:group(*)',(req,res) => {
+	var groupID = req.params.group;
+	MongoClient.connect(dburl, (err, client) => {
+		if (err) {
+		  console.error(err)
+		  return
+		}
+		else{
+			const dbPosts = client.db('groupee');
+			const collectiondbPosts = dbPosts.collection('groups');
+			if(collectiondbPosts.find(groupID)){
+				res.render('invite',{'groupID':groupID});
+			}
+			else{
+				console.log("Group does not exist");
+			}
+		}
+	  });
+});
 
+app.post('/invite/:group(*)', (req,res) => {
+
+});
+
+//Invite Member Ends
 //handling user login the Logical Part
 app.post("/login", function(req, res){
 	req.body.username
