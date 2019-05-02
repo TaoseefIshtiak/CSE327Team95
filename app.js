@@ -66,7 +66,7 @@ app.use(express.static(__dirname + '/views'));
 
 //creating a new group from home page
 app.get("/", function(req, res){
-	res.render("home");
+	res.render("Homepage");
 });
 
 
