@@ -28,7 +28,7 @@ header   {
 .hero           {
   min-height: 800px;
   text-align: center;
-  background-image: url('../img/sky.jpg');
+  background-image: url(sky.jpg);
   background-size: cover;
 }
 .hero-content   {
