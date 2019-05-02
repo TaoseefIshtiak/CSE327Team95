@@ -8,6 +8,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
   }
 })
  
@@ -19,9 +22,8 @@ app.get('/', function(req, res) {
  
 app.post("/uploadfile", upload.single('myFile'),function(req, res){
 	if (req.file) {
-        console.log('Uploading file...');
         var filename = req.file.filename;
-        console.log(filename);
+        console.log('Uploaded file '+filename);
 	}
 	else{
 		console.log('Failed to upload!');
