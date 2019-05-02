@@ -1,0 +1,88 @@
+Class Names:
+1. User: 
+
+methods:
++ createPost(userID, post)
++ editPost(userID, post)
++ uploadFiles(userID, file)
+- editPassword(password)
++ registration(firstName, lastName, email, phoneNo, password, userName)
++ checkUserName(userName)
++ login(userName, email, password)
+- passwordEncryption(password)
+- createGroup(groupName):String
+- addMember(groupID, userID):String
++ leaveGroup(groupID, userID)
++ reportGroup(groupID)
++ postComment(Message, userID, postID)
++ editComment(Message, userID, postID)
++ deleteComment()
+- removePost(userID, post)
+
+2. Group:
+
+methods:
++ addObjective()
++ selectType()
+- showMembersList()
+- showMembersProfile(userID)
+- sendMessage()
+- receiveMessage()
+- generatePostID()
+- showPostList()
+- addPost(Post)
+- removePost(Post)
+
+GroupAdmin:
+
+methods:
++ editGroupName()
+- removeMember(params)
+
+
+TodoList:
+
+methods:
+- addTask(userID, tasks)
+- editTasks(userID, tasks)
+- removeTasks(userID, tasks)
+
+Posts:
+
+methods:
+- visitPostWindow()
+- createPoll(userID, poll)
+- editPoll(userID, poll)
+- removePoll(userID, poll)
+- commentPost(userID, post)
+- participatePoll(userID, poll)
+- generateCommentID()
+- showCommentList()
+- addComment(Comment)
+- removeComment(Comment)
+
+FileSection:
+
+methods:
+- visitFileSection()
+- uploadFile(userID, fileName)
+- removeFile(userID, fileName)
+- sucessMessage()
+
+MeetingScheduler:
+
+methods:
+- createMeeting(userID, meetingName, meetingDateTime)
+- editMeeting(userID, meetingName, meetingDateTime)
+- deleteMeeting(userID, meetingName, meetingDateTime)
++ addPeopleInMeeting(userID, userName)
+
+Comment:
+
+commentID
+UserID
+String message
+Timestamp Date
+
+methods:
+setMessage
