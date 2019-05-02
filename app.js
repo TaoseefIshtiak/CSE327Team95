@@ -45,6 +45,8 @@ app.use(require("express-session")({
 app.use(passport.initialize());
 app.use(passport.session());
 
+
+
 var storage = multer.diskStorage({
   			destination: function (req, file, cb) {
     			cb(null, 'data')
@@ -177,16 +179,28 @@ app.get("/createPost", isLoggedIn, function(req, res){
 
 app.post("/createPost",upload.single('postFile'), function(req, res){
 	console.log(userprofile+ " is trying to create a User post");
-	var postinfo = new Post({ //You're entering a new bug here, giving it a name, and specifying it's type.
-	post : req.body.post,
-	createdby: userprofile,
-	postID : 1,
-    poll: null,
-	pollID : 1,
-	postDateTime : "1.5.19",
-	fileName : req.file.filename,
- 	});
-
+	
+	if(req.file) {
+		var postinfo = new Post({ //You're entering a new bug here, giving it a name, and specifying it's type.
+			post : req.body.post,
+			createdby: userprofile,
+			postID : 1,
+    		poll: null,
+			pollID : 1,
+			postDateTime : Date.now(),
+			fileName : req.file.filename
+ 		});
+	}
+	else {
+		var postinfo = new Post({ //You're entering a new bug here, giving it a name, and specifying it's type.
+			post : req.body.post,
+			createdby: userprofile,
+			postID : 1,
+    		poll: null,
+			pollID : 1,
+			postDateTime : Date.now()
+ 		});
+	}
 	postinfo.save(function(error) {
 		console.log("Your post has been saved!");
 		if (error) {
