@@ -22,6 +22,7 @@ var GroupSchema = new mongoose.Schema({
 	adminName : String,
 	userID : String,
 	chats : String,
+	memberIDs : [String]
 });
 
 
