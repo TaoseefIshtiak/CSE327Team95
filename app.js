@@ -7,6 +7,7 @@ var express = require("express"),
 	Post = require("./models/post"),
 	Todo = require("./models/todo"),	
 	LocalStrategy = require("passport-local"),
+	multer = require('multer'),
 	passportLocalMongoose = require("passport-local-mongoose"),
 	path = require('path'),
 	Joi = require('joi'),
@@ -43,6 +44,17 @@ app.use(require("express-session")({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+
+var storage = multer.diskStorage({
+  			destination: function (req, file, cb) {
+    			cb(null, 'data')
+  			},
+  			filename: function (req, file, cb) {
+    			cb(null, Date.now() + file.originalname)
+  			}
+})
+
+var upload = multer({ storage: storage })
 
 // schema used for data validation for our todo document
 const schema = Joi.object().keys({
@@ -163,7 +175,7 @@ app.get("/createPost", isLoggedIn, function(req, res){
 });
 
 
-app.post("/createPost", function(req, res){
+app.post("/createPost",upload.single('postFile'), function(req, res){
 	console.log(userprofile+ " is trying to create a User post");
 	var postinfo = new Post({ //You're entering a new bug here, giving it a name, and specifying it's type.
 	post : req.body.post,
@@ -173,6 +185,7 @@ app.post("/createPost", function(req, res){
 	pollID : 1,
 	postDateTime : "1.5.19",
  	});
+
 	postinfo.save(function(error) {
 		console.log("Your post has been saved!");
 		if (error) {

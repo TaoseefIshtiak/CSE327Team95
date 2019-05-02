@@ -14,8 +14,9 @@
 <body>
 <h1>welcome to your new group</h1>
 
-<form action="/createPost" method="POST">
+<form action="/createPost" enctype="multipart/form-data" method="POST">
     <input type = "text" name= "post" placeholder = "What's on your mind??">
+    <input type="file" name="postFile" />
     <button>Create Group</button>
 </form>
 
