@@ -188,11 +188,7 @@ app.post("/createPost",upload.single('postFile'), function(req, res){
     		poll: null,
 			pollID : 1,
 			postDateTime : Date.now(),
-<<<<<<< HEAD
-			fileName : req.file.filename,
-=======
 			fileName : req.file.filename
->>>>>>> 7aa266a34b57b397e2f182c97231a6ed045c77df
 			originalName : req.file.originalname
  		});
 	}
@@ -261,6 +257,15 @@ app.post("/register", function(req, res){
 app.get("/login", function(req, res){
 	res.render("Firstpage");
 });
+
+app.get('/download/:file(*)',(req, res) => {
+  var file = req.params.file;
+  var fileLocation = path.join('./data',file);
+  res.download(fileLocation, file);
+  res.render("group"); 
+});
+
+
 
 //handling user login the Logical Part
 app.post("/login", function(req, res){
@@ -350,15 +355,6 @@ app.get('/myToDos', function(req, res) {
 		}
 	  });
     
-});
-
-app.get('/deletemyToDos/:id', (req, res) => {
-    Todo.findByIdAndRemove(req.params.id, (err, doc) => {
-        if (!err) {
-            res.redirect('secret');
-        }
-        else { console.log('Error in employee delete :' + err); }
-    });
 });
 
 
