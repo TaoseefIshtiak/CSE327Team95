@@ -37,8 +37,8 @@
                    <td><%= infos[i].post %></td>
                    <td><%= infos[i].createdby %></td>
                    <td><%= infos[i].postDateTime %></td>
-          
-          
+                   <td><a href=" <%= '/download/' + infos[i].fileName %> "><%= infos[i].originalName %></a></td>
+        
                  </tr>
               <% } %>
                 </tbody>

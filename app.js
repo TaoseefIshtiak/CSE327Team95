@@ -24,8 +24,6 @@ var express = require("express"),
 	MongoClient = require("mongodb").MongoClient;
 	
 
-
-
 const app = express();
 const mongoOptions = {useNewUrlParser : true};
 
@@ -188,7 +186,8 @@ app.post("/createPost",upload.single('postFile'), function(req, res){
     		poll: null,
 			pollID : 1,
 			postDateTime : Date.now(),
-			fileName : req.file.filename
+			fileName : req.file.filename,
+			originalName : req.file.originalname
  		});
 	}
 	else {
@@ -201,6 +200,7 @@ app.post("/createPost",upload.single('postFile'), function(req, res){
 			postDateTime : Date.now()
  		});
 	}
+
 	postinfo.save(function(error) {
 		console.log("Your post has been saved!");
 		if (error) {
@@ -255,6 +255,14 @@ app.post("/register", function(req, res){
 app.get("/login", function(req, res){
 	res.render("Firstpage");
 });
+
+app.get('/download/:file(*)',(req, res) => {
+  var file = req.params.file;
+  var fileLocation = path.join('./data',file);
+  res.download(fileLocation, file);
+});
+
+
 
 //handling user login the Logical Part
 app.post("/login", function(req, res){
