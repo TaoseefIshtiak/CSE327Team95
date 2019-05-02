@@ -18,8 +18,13 @@ var PostSchema = new mongoose.Schema({
     poll: String,
 	pollID : String,
 	postDateTime : String,
+<<<<<<< HEAD
+    fileName : String,
+    originalName: String
+=======
 	fileName : String,
 	originalName : String
+>>>>>>> 7aa266a34b57b397e2f182c97231a6ed045c77df
 });
 
 
