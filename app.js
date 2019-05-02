@@ -24,8 +24,6 @@ var express = require("express"),
 	MongoClient = require("mongodb").MongoClient;
 	
 
-
-const path = require('path');
 const app = express();
 const mongoOptions = {useNewUrlParser : true};
 
@@ -354,15 +352,6 @@ app.get('/myToDos', function(req, res) {
 		}
 	  });
     
-});
-
-app.get('/deletemyToDos/:id', (req, res) => {
-    Todo.findByIdAndRemove(req.params.id, (err, doc) => {
-        if (!err) {
-            res.redirect('secret');
-        }
-        else { console.log('Error in employee delete :' + err); }
-    });
 });
 
 
