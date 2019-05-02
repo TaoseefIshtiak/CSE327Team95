@@ -184,6 +184,7 @@ app.post("/createPost",upload.single('postFile'), function(req, res){
     poll: null,
 	pollID : 1,
 	postDateTime : "1.5.19",
+	fileName : req.file.filename,
  	});
 
 	postinfo.save(function(error) {

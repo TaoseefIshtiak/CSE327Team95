@@ -18,6 +18,7 @@ var PostSchema = new mongoose.Schema({
     poll: String,
 	pollID : String,
 	postDateTime : String,
+	fileName : String
 });
 
 
