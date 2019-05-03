@@ -1,20 +1,18 @@
 body
 {
 
-  background-image: url(sky.jpg);
+  background-image: url(dd.jpg);
   height:100vh;
   background-size: cover;
   background-position: center;
-  opacity:0.6;
 
 
 
-	font-family: moolboran;
+	font-family: moolboran; 
 	color: #3c3939;
-	background-color:rgb(192,192,192);opacity:0.8;
+	background-color:rgb(192,192,192);opacity:0.6;
 	
 }
-
 .profile
 {
 	width: 700px;
