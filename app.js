@@ -551,13 +551,16 @@ function updateRecord(req, res) {
 	console.log(req.body._id);
     User.findOneAndUpdate({ _id: usr_id }, req.body, { new: true }, (err, doc) => {
         if (!err){ 
-			res.redirect('secret'); 
+					res.render("profile", {
+						viewTitle: 'Profile',
+						infos: req.body
+				});
 		}
         else {
             if (err.name == 'ValidationError') {
                 // handleValidationError(err, req.body);
                 res.render("profile", {
-                    viewTitle: 'Update Userinfo',
+                    viewTitle: 'Profile',
                     infos: req.body
                 });
             }
@@ -586,7 +589,7 @@ app.get('/profile', isLoggedIn, function(req, res){
 						usr_id = items[i]._id;
 													
 						res.render('profile', {'infos': items[i],
-												viewTitle: "Update user"});
+												viewTitle: "My Porfile"});
 					}
 				}
 			  });
@@ -637,7 +640,7 @@ app.get('/editProfile', isLoggedIn, function(req, res){
 						console.log(userprofile + "you are trying to read information of "+ items[i].username + items[i]._id);
 						usr_id = items[i]._id;
 						res.render('profileedit', {'infos': items[i],
-												viewTitle: "Updated your profile"});
+												viewTitle: "Update your profile"});
 					}
 				}
 			  });

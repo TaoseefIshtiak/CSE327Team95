@@ -18,25 +18,30 @@
        <h1>My Profile</h1>
  	</div>
     <div class="main-container">
-    	<h1><%= infos.firstName %> </h1>
-    	<h3><%= infos.eMail %></h1>
-		<h1>Enrolled list of groups</h1>
+		<p><font size= "8"><i>Full Name </i> </font></p>
+		<h3><%= infos.firstName %>  <%= infos.lastName %> </h1>
+		<hr>
+		<hr>
+		<p><font size= "8"><i>Email </i> </font></p>
+		<h3><%= infos.eMail %></h3>
+		<hr> <hr> <hr>
 		
 		<button	class="button button1">
 		<a href = "/editProfile" ,"http://example.com/" style="color:#ffffff;">Edit your profile</a>
 		</button>
-		<br>
 		<button	class="button button1">
-		<a href = "/grouphome","http://example.com/" style="color:#ffffff;"">Home Page</a>
+		<a href = "/grouphome","http://example.com/" style="color:#ffffff;"">Create a new Group</a>
 		</button>
-	</br>
-	<button class="button button1">
-		<a href = "/myToDos",,"http://example.com/" style="color:#ffffff;">My Todos...</a>
-	</button>
-	<br>
-	<button class="button button1">
-			<a href = "/getGroupList",,"http://example.com/" style="color:#ffffff;">Enrolled Groups</a>
-	</button>
+		<button class="button button1">
+			<a href = "/myToDos",,"http://example.com/" style="color:#ffffff;">My Todos...</a>
+		</button>
+		<br>
+		<button class="button button1">
+				<a href = "/getGroupList",,"http://example.com/" style="color:#ffffff;">Enrolled Groups</a>
+		</button>
+		<button class="button button1">
+				<a href = "/logout",,"http://example.com/" style="color:#ffffff;">Log Out</a>
+		</button>
 
 		
 		</td>
