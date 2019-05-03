@@ -19,21 +19,9 @@
 		<br>
 		<a href = "/grouphome">Home Page</a>
 		<a href = "/myToDos">My Todos...</a>
+		<a href = "/getGroupList">My Todos...</a>
 
-		<h2> Enrolled Groups </h2>
-		<table>
-			<tbody>
-			<% for(var i =1; i< infos.length; i++){ %>
-			<% for (var j = 0; j < infos[i].memberIDs.length; j++) { %>
-				<tr> <% if(infos[i].memberIDs[j] == userprofile){ %>
-					<td> <%= userprofile + "is a member of "+ infos[i].groupName %> </td>
-				<% } %>
-				</tr>
-			<% } %>
-		<% } %>
-		</td>
-			</tbody>
-	</table>	
+	
 
  </div>
 

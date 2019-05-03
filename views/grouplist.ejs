@@ -6,5 +6,19 @@
 </head>
 <body>
  <h1>Group List</h1>
+ <h2> Enrolled Groups </h2>
+ <table>
+	 <tbody>
+	 <% for(var i =0; i< infos.length; i++){ %>
+	 <% for (var j = 0; j < infos[i].memberIDs.length; j++) { %>
+		 <tr> <% if(infos[i].memberIDs[j] == userprofile){ %>
+			 <td> <font size="6"> <%= infos[i].groupName %> </font> </td>
+		 <% } %>
+		 </tr>
+	 <% } %>
+ <% } %>
+	 </tbody>
+</table>
+
 </body>
 </html>
