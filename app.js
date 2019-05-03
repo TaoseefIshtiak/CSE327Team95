@@ -141,15 +141,32 @@ app.post("/grouphome", function(req, res){
 	chats : chats,
  	});
 	groupinfo.save(function(error) {
-		console.log("Your bee has been saved!");
 		if (error) {
 	    console.error(error);
 		 }
 		else{
-			res.render("profile", {
-				'infos': userprofile
-			});
+			console.log("Your bee has been saved!");
 		}});
+		MongoClient.connect(dburl, (err, client) => {
+			if (err) {
+			  console.error(err)
+			  return
+			}
+			else{
+				const dbPosts = client.db('groupee');
+				const collectiondbPosts = dbPosts.collection('posts');
+				collectiondbPosts.find().toArray((err, items) => {
+					// res.render('todos', {
+					// 	infos: items
+					// });
+					// console.log(items)
+					Infos = items;
+					//var parseVal = JSON.parse(items);
+					 console.log(items);
+					res.render('group', {'infos': items});
+				  });
+			}
+		});
 	console.log(userprofile+ " is trying to create a group");
 });
 
