@@ -358,7 +358,7 @@ function  inviteMember(userName, updateMember, res, groupID){
 				if(err){
 					res.redirect('/group/'+groupID);
 				}
-				else{
+				else{ 
 					if(items.length!=0){
 						updateMember(userName, groupID);
 					}
