@@ -27,13 +27,17 @@
                   <% for(var i=0; i < infos.length; i++) { %>
                  <tr>
                      <% if(profile == infos[i].createdby){ %>
-          
-                   <td><%= infos[i].todoList%></td>
-                   <td><button><a href = "/delete/<%= infos[i]._id %>"> Delete </a></button></td>
+                      <td>
+                      <form action="/updateTodo" method="POST">
+                        <input type = "text" name= "todo" value=<%= infos[i].todoList %>>
+                        <button> Update </button>
+                        <button><a href = "/delete/<%= infos[i]._id %>"> Delete </a></button>
+                      </form>
+                      </td>
                  <% } %>
           
                  </tr>
-              <% } %>
+              <% } %>    
                 </tbody>
           
               </table>

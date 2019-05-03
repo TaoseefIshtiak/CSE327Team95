@@ -267,6 +267,7 @@ app.post("/register", function(req, res){
 	req.body.username
 	req.body.eMail
 	req.body.password
+	userprofile = req.body.username
 	User.register(new User({
 		firstName: req.body.firstName, 
 		lastName: req.body.lastName, 
@@ -435,13 +436,6 @@ app.post("/myToDos", function(req, res){
 	});
 });
 
-
-//handling user login the View Rendering Part
-
-// app.get("/myToDos", function(req, res){
-// 	res.render("todo");
-// });
-
 app.get('/myToDos', function(req, res) {
 	
 	MongoClient.connect(dburl, (err, client) => {
@@ -462,8 +456,8 @@ app.get('/myToDos', function(req, res) {
 					if(items[i].createdby == userprofile){
 						console.log(items[i].createdby + " you are trying to read information of " + items[i]._id + items[i].todoList);
 						todo_id = items[i]._id;
-						console.log(items[i]._id);
-						console.log(items[i].todoList);
+						console.log(items[i].todoList + "contains" + todo_id);
+						console.log( "created by " + items[i].createdby);
 					}
 				}
 			  });
@@ -471,6 +465,38 @@ app.get('/myToDos', function(req, res) {
 	});
     
 });
+
+app.post('/updateTodo', (req, res) => {
+    updateTodo(req, res);
+});
+
+function updateTodo(req, res) {
+	console.log(todo_id);
+    Todo.findOneAndUpdate({ _id: todo_id },{$set: {todoList: req.body.todo}}, { new: true }, (err, infos) => {
+        if (!err){ 
+			res.redirect('secret'); 
+			console.log(infos);
+			console.log(req.body.todo);
+		}
+		else{
+			console.log(err);
+		}
+    });
+}
+
+
+app.get('/delete/:id', (req, res) => {
+    Todo.findByIdAndRemove(req.params.id, (err, doc) => {
+        if (!err) {
+			res.redirect('/secret');
+			console.log("todo removed from collection");
+        }
+        else { console.log('Error in employee delete :' + err); }
+    });
+});
+
+
+
 
 
 // //profile view section for todo list updataion
@@ -584,30 +610,6 @@ app.put('/:id',(req,res)=>{
 //     })    
 // });
 
-
-
-//delete
-app.delete('/:id',(req,res)=>{
-    // Primary Key of Todo Document
-    const todoID = req.params.id;
-    // Find Document By ID and delete document from record
-    db.getDB().collection(collection).findOneAndDelete({_id : db.getPrimaryKey(todoID)},(err,result)=>{
-        if(err)
-            console.log(err);
-        else
-            res.json(result);
-    });
-});
-
-// Middleware for handling Error
-// Sends Error Response Back to User
-app.use((err,req,res,next)=>{
-    res.status(err.status).json({
-        error : {
-            message : err.message
-        }
-    });
-})
 
 
 // app.get("/profile", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
