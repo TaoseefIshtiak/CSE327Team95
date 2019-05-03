@@ -343,6 +343,7 @@ app.get('/group/:group(*)',(req,res) => {
 	groupMake(groupID, renderGroup, res);
 });
 
+
 function  inviteMember(userName, updateMember, res, groupID){
 
 	MongoClient.connect(dburl, (err, client) => {
@@ -403,6 +404,7 @@ function updateMember(username, groupID){
 		}
 	});
 }
+
 
 
 app.post('/group/:group(*)/invite', (req,res) => { // needs to implement username validation check 
@@ -724,34 +726,49 @@ app.get('/profile', isLoggedIn, function(req, res){
 			const collectiondbUserInfo = dbUserInfo.collection('users');
 			const collectiondbGroupList = dbUserInfo.collection('groups');
 			collectiondbUserInfo.find().toArray((err, items) => {
-				Infos = items;
+				console.log("helo helo helo ");
+				console.log(Infos);
 				for (var i = 0; i < items.length; i++) { 
 					if(items[i].username == userprofile){
 						console.log(userprofile + "you are trying to read information of "+ items[i].username + items[i]._id);
 						usr_id = items[i]._id;
+													
 						res.render('profile', {'infos': items[i],
-												viewTitle: "Update user"});
+												viewTitle: "Update user",
+											'groups': groups});
 					}
 				}
-			  });
-			  collectiondbGroupList.find().toArray((err, items) => {
-				Infos = items;
-				for(var i =1; i< items.length; i++){
-					for (var j = 0; j < items[i].memberIDs.length; j++) {
-						if(items[i].memberIDs[j] == userprofile){
-							console.log(userprofile + "is a member of "+ items[i].groupName);
-							res.render('profile', {'infos': items[i],
-													viewTitle: "Update user"});
-							}
-					}
-				}	
-				console.log(items.length);
-				console.log(items[1].memberIDs.length);
-
 			  });
 		}
 	});
 });
+
+app.get('/getGroupList', isLoggedIn, function(req, res){
+	MongoClient.connect(dburl, (err, client) => {
+		if (err) {
+		  console.error(err)
+		  return
+		}
+		else{
+			const dbUserInfo = client.db('groupee');
+			const collectiondbGroupList = dbUserInfo.collection('groups');
+			collectiondbGroupList.find().toArray((err, items) => {
+				Infos = items;
+				console.log(items);
+				for(var i =0; i< items.length; i++){
+					for (var j = 0; j < items[i].memberIDs.length; j++) {
+						if(items[i].memberIDs[j] == userprofile){
+							console.log(userprofile + "is a member of "+ items[i].groupName);
+							}
+					}
+				}	
+				res.render('grouplist', {'infos': items,
+																	'userprofile': userprofile});
+			  });
+		}
+	  });
+});
+
 
 app.get('/editProfile', isLoggedIn, function(req, res){
 	MongoClient.connect(dburl, (err, client) => {
