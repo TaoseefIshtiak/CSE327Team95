@@ -326,7 +326,7 @@ function groupMake(groupID, renderGroup, res){
 					}
 					else{
 						console.log("Group exists");
-						renderGroup(res);
+						renderGroup(res, groupID);
 					}				
 				}
 			});
@@ -334,7 +334,7 @@ function groupMake(groupID, renderGroup, res){
 	});
 }
 
-function renderGroup(res){
+function renderGroup(res, groupID){
 	res.render("invite", {"groupID" : groupID} );
 }
 
@@ -348,6 +348,7 @@ app.get('/group/:group(*)',(req,res) => {
 app.post('/group/:group(*)/invite', (req,res) => { // needs to implement username validation check 
 	var username = req.body.username;
 	var groupID = req.params.group;
+	console.log(groupID);
 	try{
 		var groupOID = mongoose.Types.ObjectId(groupID);
 	}
