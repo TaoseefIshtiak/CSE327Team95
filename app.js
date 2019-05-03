@@ -299,20 +299,19 @@ app.get('/download/:file(*)',(req, res) => {
 });
 
 //Invite Member Starts
+function groupExists(groupID, renderGroup, res){
 
-app.get('/group/:group(*)',(req,res) => {
-	var groupID = req.params.group;
+	
 	try{
 		var groupOID = mongoose.Types.ObjectId(groupID);
 	}
 	catch{
-		console.log("Not a valid objectID");
-		res.redirect('/');
+		console.log("Invalid group id");
 	}
+
 	MongoClient.connect(dburl, (err, client) => {
 		if (err) {
-		  console.error(err)
-		  return
+			console.log(err);				
 		}
 		else{
 			const dbGroupee = client.db('groupee');
@@ -323,19 +322,27 @@ app.get('/group/:group(*)',(req,res) => {
 				}
 				else{
 					if(items.length==0){
-						console.log('No Group Found');	
+						console.log("No such group exists");
 					}
 					else{
-						console.log('Found Group');
-						res.render("invite", {"groupID" : groupID} );
-					}
-							
+						console.log("Group exists");
+						renderGroup(res);
+					}				
 				}
 			});
 		}
 	});
+}
 
+function renderGroup(res){
+	res.render("invite", {"groupID" : groupID} );
+}
+
+app.get('/group/:group(*)',(req,res) => {
+	var groupID = req.params.group;
+	groupExists(groupID, renderGroup, res);
 });
+
 
 app.post('/group/:group(*)/invite', (req,res) => { // needs to implement username validation check 
 	var username = req.body.username;
