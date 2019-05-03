@@ -299,7 +299,7 @@ app.get('/download/:file(*)',(req, res) => {
 });
 
 //Invite Member Starts
-function groupExists(groupID, renderGroup, res){
+function groupMake(groupID, renderGroup, res){
 
 	
 	try{
@@ -340,8 +340,9 @@ function renderGroup(res){
 
 app.get('/group/:group(*)',(req,res) => {
 	var groupID = req.params.group;
-	groupExists(groupID, renderGroup, res);
+	groupMake(groupID, renderGroup, res);
 });
+
 
 
 app.post('/group/:group(*)/invite', (req,res) => { // needs to implement username validation check 
