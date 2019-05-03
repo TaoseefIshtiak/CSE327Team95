@@ -318,11 +318,40 @@ app.get('/group/:group(*)',(req,res) => {
 
 });
 
-app.post('/group/:group(*)/invite', (req,res) => {
+app.post('/group/:group(*)/invite', (req,res) => { // needs to implement username validation check 
+	var username = req.body.username;
+	var groupID = req.params.group;
+	try{
+		var groupOID = mongoose.Types.ObjectId(groupID);
+	}
+	catch{
+		console.log("Not a valid objectID");
+		res.redirect('/');
+	}
+	MongoClient.connect(dburl, (err, client) => {
+		if (err) {
+		  console.error(err)
+		  return
+		}
+		else{
+			const dbGroupee = client.db('groupee'); 
+			const collectionGroup = dbGroupee.collection('groups');
+			collectionGroup.findOneAndUpdate({_id : groupOID}, {$push: {memberIDs : username}}, {new: true}, 
+				function (err, items) {
+				if(err){
+					console.log(err);
+				}
+				else{
+					console.log("Added Member");		
+				}
+			});
+		}
+	});
 
 });
 
 //Invite Member Ends
+
 //handling user login the Logical Part
 app.post("/login", function(req, res){
 	req.body.username
