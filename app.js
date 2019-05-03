@@ -570,73 +570,6 @@ app.get('/delete/:id', (req, res) => {
 
 
 
-
-
-// //profile view section for todo list updataion
-// app.post('/profile', (req, res) => {
-//     updateRecord(req, res);
-// });
-
-
-// function updateRecord(req, res) {
-// 	console.log(req.body._id);
-//     User.findOneAndUpdate({ _id: usr_id }, req.body, { new: true }, (err, doc) => {
-//         if (!err){ 
-// 			res.redirect('secret'); 
-// 		}
-//         else {
-//             if (err.name == 'ValidationError') {
-//                 // handleValidationError(err, req.body);
-//                 res.render("profile", {
-//                     viewTitle: 'Update Userinfo',
-//                     infos: req.body
-//                 });
-//             }
-//             else
-//                 console.log('Error during record update : ' + err);
-//         }
-//     });
-// }
-
-// app.get('/profile', isLoggedIn, function(req, res){
-// 	MongoClient.connect(dburl, (err, client) => {
-// 		if (err) {
-// 		  console.error(err)
-// 		  return
-// 		}
-// 		else{
-// 			const dbUserInfo = client.db('groupee');
-// 			const collectiondbUserInfo = dbUserInfo.collection('users');
-// 			collectiondbUserInfo.find().toArray((err, items) => {
-// 				Infos = items;
-// 				for (var i = 0; i < items.length; i++) { 
-// 					if(items[i].username == userprofile){
-// 						console.log(userprofile + "you are trying to read information of "+ items[i].username + items[i]._id);
-// 						usr_id = items[i]._id;
-// 						res.render('profile', {'infos': items[i],
-// 												viewTitle: "Update user"});
-// 					}
-// 				}
-// 			  });
-// 		}
-// 	  });
-// });
-
-// // read
-
-// app.get('/myToDos',(req,res){
-//     // get all Todo documents within our todo collection
-// 	// send back to user as json
-// 	console.log("taoseeeeeefff");
-//     db.getDB().collection(collection).find({}).toArray((err,documents)=>{
-//         if(err)
-//             console.log(err);
-//         else{
-//             res.json(documents);
-//         }
-//     });
-// });
-
 // update
 app.put('/:id',(req,res)=>{
     // Primary Key of Todo Document we wish to update
@@ -652,42 +585,6 @@ app.put('/:id',(req,res)=>{
         }      
     });
 });
-
-
-
-
-// app.post('/',(req,res,next)=>{
-//     // Document to be inserted
-//     const userInput = req.body;
-
-//     // Validate document
-//     // If document is invalid pass to error middleware
-//     // else insert document within todo collection
-//     Joi.validate(userInput,schema,(err,result)=>{
-//         if(err){
-//             const error = new Error("Invalid Input");
-//             error.status = 400;
-//             next(error);
-//         }
-//         else{
-//             db.getDB().collection(collection).insertOne(userInput,(err,result)=>{
-//                 if(err){
-//                     const error = new Error("Failed to insert Todo Document");
-//                     error.status = 400;
-//                     next(error);
-//                 }
-//                 else
-//                     res.json({result : result, document : result.ops[0],msg : "Successfully inserted Todo!!!",error : null});
-//             });
-//         }
-//     })    
-// });
-
-
-
-// app.get("/profile", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
-// 	res.render("profile");
-// });
 
 //profile view section
 app.post('/editProfile', (req, res) => {
@@ -734,8 +631,7 @@ app.get('/profile', isLoggedIn, function(req, res){
 						usr_id = items[i]._id;
 													
 						res.render('profile', {'infos': items[i],
-												viewTitle: "Update user",
-											'groups': groups});
+												viewTitle: "Update user"});
 					}
 				}
 			  });

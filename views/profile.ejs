@@ -32,18 +32,13 @@
 	</br>
 	<button class="button button1">
 		<a href = "/myToDos",,"http://example.com/" style="color:#ffffff;">My Todos...</a>
-</button>
-		<h2> Enrolled Groups </h2>
-		<table>
-			<tbody>
-			<% for(var i =1; i< infos.length; i++){ %>
-			<% for (var j = 0; j < infos[i].memberIDs.length; j++) { %>
-				<tr> <% if(infos[i].memberIDs[j] == userprofile){ %>
-					<td> <%= userprofile + "is a member of "+ infos[i].groupName %> </td>
-				<% } %>
-				</tr>
-			<% } %>
-		<% } %>
+	</button>
+	<br>
+	<button class="button button1">
+			<a href = "/getGroupList",,"http://example.com/" style="color:#ffffff;">Enrolled Groups</a>
+	</button>
+
+		
 		</td>
 			</tbody>
 	</table>	
