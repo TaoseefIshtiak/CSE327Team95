@@ -688,6 +688,7 @@ app.get('/profile', isLoggedIn, function(req, res){
 		else{
 			const dbUserInfo = client.db('groupee');
 			const collectiondbUserInfo = dbUserInfo.collection('users');
+			const collectiondbGroupList = dbUserInfo.collection('groups');
 			collectiondbUserInfo.find().toArray((err, items) => {
 				Infos = items;
 				for (var i = 0; i < items.length; i++) { 
@@ -698,6 +699,21 @@ app.get('/profile', isLoggedIn, function(req, res){
 												viewTitle: "Update user"});
 					}
 				}
+			  });
+			  collectiondbGroupList.find().toArray((err, items) => {
+				Infos = items;
+				// for (var i = 0; i < items.length; i++) {
+				// 	for (var j = 0; j < 5; i++) {  
+				// 		console.log(items[i].memberIDs[j]);
+				// 		if(items[i].memberIDs[j] == userprofile){
+				// 			console.log(userprofile + "bhungchung "+ items[i].username + items[j].memberIDs[j]);
+				// 			usr_id = items[i]._id;
+				// 			res.render('profile', {'infos': items[i],
+				// 									viewTitle: "Update user"});
+				// 			}
+				// 	}
+				// }
+				console.log(items[11].memberIDs[0] + "here");
 			  });
 		}
 	});
