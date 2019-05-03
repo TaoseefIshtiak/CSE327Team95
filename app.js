@@ -326,7 +326,7 @@ function groupMake(groupID, renderGroup, res){
 					}
 					else{
 						console.log("Group exists");
-						renderGroup(res, groupID);
+						renderGroup(res);
 					}				
 				}
 			});
@@ -334,7 +334,7 @@ function groupMake(groupID, renderGroup, res){
 	});
 }
 
-function renderGroup(res, groupID){
+function renderGroup(res){
 	res.render("invite", {"groupID" : groupID} );
 }
 
@@ -344,38 +344,10 @@ app.get('/group/:group(*)',(req,res) => {
 });
 
 
-function  inviteMember(userName, updateMember, res, groupID){
 
-	MongoClient.connect(dburl, (err, client) => {
-		if (err) {
-		  console.error(err)
-		  return
-		}
-		else{
-			const dbGroupee = client.db('groupee'); 
-			const collectionUser = dbGroupee.collection('users');
-			collectionUser.find({username : userName}).toArray((err, items) => {
-				if(err){
-					res.redirect('/group/'+groupID);
-				}
-				else{
-					if(items.length!=0){
-						updateMember(userName, groupID);
-					}
-					else{
-						console.log("User name does not exists");
-					}
-					res.redirect('/group/'+groupID);
-				}
-			});
-		}
-	});
-
-}
-
-function updateMember(username, groupID){
-
-
+app.post('/group/:group(*)/invite', (req,res) => { // needs to implement username validation check 
+	var username = req.body.username;
+	var groupID = req.params.group;
 	try{
 		var groupOID = mongoose.Types.ObjectId(groupID);
 	}
@@ -383,7 +355,6 @@ function updateMember(username, groupID){
 		console.log("Not a valid objectID");
 		res.redirect('/');
 	}
-
 	MongoClient.connect(dburl, (err, client) => {
 		if (err) {
 		  console.error(err)
@@ -403,14 +374,7 @@ function updateMember(username, groupID){
 			});
 		}
 	});
-}
 
-
-
-app.post('/group/:group(*)/invite', (req,res) => { // needs to implement username validation check 
-	var username = req.body.username;
-	var groupID = req.params.group;
-	inviteMember(username, updateMember, res, groupID);
 });
 
 //Invite Member Ends
@@ -738,18 +702,18 @@ app.get('/profile', isLoggedIn, function(req, res){
 			  });
 			  collectiondbGroupList.find().toArray((err, items) => {
 				Infos = items;
-				// for (var i = 0; i < items.length; i++) {
-				// 	for (var j = 0; j < 5; i++) {  
-				// 		console.log(items[i].memberIDs[j]);
-				// 		if(items[i].memberIDs[j] == userprofile){
-				// 			console.log(userprofile + "bhungchung "+ items[i].username + items[j].memberIDs[j]);
-				// 			usr_id = items[i]._id;
-				// 			res.render('profile', {'infos': items[i],
-				// 									viewTitle: "Update user"});
-				// 			}
-				// 	}
-				// }
-				console.log(items[11].memberIDs[0] + "here");
+				for(var i =1; i< items.length; i++){
+					for (var j = 0; j < items[i].memberIDs.length; j++) {
+						if(items[i].memberIDs[j] == userprofile){
+							console.log(userprofile + "is a member of "+ items[i].groupName);
+							res.render('profile', {'infos': items[i],
+													viewTitle: "Update user"});
+							}
+					}
+				}	
+				console.log(items.length);
+				console.log(items[1].memberIDs.length);
+
 			  });
 		}
 	});
