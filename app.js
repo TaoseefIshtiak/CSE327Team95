@@ -344,6 +344,40 @@ app.get('/group/:group(*)',(req,res) => {
 });
 
 
+<<<<<<< HEAD
+=======
+function  inviteMember(userName, updateMember, res, groupID){
+
+	MongoClient.connect(dburl, (err, client) => {
+		if (err) {
+		  console.error(err)
+		  return
+		}
+		else{
+			const dbGroupee = client.db('groupee'); 
+			const collectionUser = dbGroupee.collection('users');
+			collectionUser.find({username : userName}).toArray((err, items) => {
+				if(err){
+					res.redirect('/group/'+groupID);
+				}
+				else{ 
+					if(items.length!=0){
+						updateMember(userName, groupID);
+					}
+					else{
+						console.log("User name does not exists");
+					}
+					res.redirect('/group/'+groupID);
+				}
+			});
+		}
+	});
+
+}
+
+function updateMember(username, groupID){
+
+>>>>>>> 512c8bfd83780e2673add45d2974dcba9912e063
 
 app.post('/group/:group(*)/invite', (req,res) => { // needs to implement username validation check 
 	var username = req.body.username;
