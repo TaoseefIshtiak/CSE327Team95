@@ -92,41 +92,6 @@ app.get("/grouphome", function(req, res){
 });
 
 
-// //experiment code to create new group
-// app.post('/grouphome', function(req, res, next) {
-// 	console.log(userprofile+ " is trying to create a group");
-// 	req.body.groupName
-// 	req.body.type
-// 	req.body.objective
-// 	groupID = 1
-// 	adminName = userprofile
-// 	userID = 1
-// 	chats = "null"
-// 	mongoose.connect('mongodb://localhost:27017/groupee' , { useNewUrlParser: true }, function(err, client) {
-// 	  if(err){ 
-// 		  throw err;  
-// 		}
-// 		var db = client.db('groupee');
-// 	  	var collection = db.collection('groups');
-// 	  	var inputs = {  
-// 		  	groupName: req.body.groupName, 
-// 			type: req.body.type, 
-// 			objective: req.body.objective,
-// 			groupID : 	groupID+2,
-// 			adminName : userprofile,
-// 			userID :  userID+2,
-// 			chats : chats, 
-// 		};
-// 	  collection.insert(inputs, function(err, result) {
-// 	  if(err) { throw err; }
-// 		console.log(result);
-// 		client.close();
-// 		res.render('profile', {
-// 			'infos': userprofile
-// 		});   
-// 	});
-// 	});
-//   });
 
 //handling Group Creation the Logical Part
 app.post("/grouphome", function(req, res){
@@ -181,12 +146,7 @@ app.get("/createPost", isLoggedIn, function(req, res){
 			const dbPosts = client.db('groupee');
 			const collectiondbPosts = dbPosts.collection('posts');
 			collectiondbPosts.find().toArray((err, items) => {
-				// res.render('todos', {
-				// 	infos: items
-				// });
-				// console.log(items)
 				Infos = items;
-				//var parseVal = JSON.parse(items);
 				 console.log(items);
             	res.render('group', {'infos': items});
 			  });
@@ -199,7 +159,7 @@ app.post("/createPost",upload.single('postFile'), function(req, res){
 	console.log(userprofile+ " is trying to create a User post");
 	
 	if(req.file) {
-		var postinfo = new Post({ //You're entering a new bug here, giving it a name, and specifying it's type.
+		var postinfo = new Post({ 
 			post : req.body.post,
 			createdby: userprofile,
 			postID : 1,
@@ -211,7 +171,7 @@ app.post("/createPost",upload.single('postFile'), function(req, res){
  		});
 	}
 	else {
-		var postinfo = new Post({ //You're entering a new bug here, giving it a name, and specifying it's type.
+		var postinfo = new Post({ 
 			post : req.body.post,
 			createdby: userprofile,
 			postID : 1,
@@ -237,12 +197,7 @@ app.post("/createPost",upload.single('postFile'), function(req, res){
 			const dbPosts = client.db('groupee');
 			const collectiondbPosts = dbPosts.collection('posts');
 			collectiondbPosts.find().toArray((err, items) => {
-				// res.render('todos', {
-				// 	infos: items
-				// });
-				// console.log(items)
 				Infos = items;
-				//var parseVal = JSON.parse(items);
          		console.log(items);
             	res.render('group', {'infos': items});
 			  });
