@@ -344,11 +344,36 @@ app.get('/group/:group(*)',(req,res) => {
 });
 
 
+function  inviteMember(userName, updateMember, res, groupID){
 
-app.post('/group/:group(*)/invite', (req,res) => { // needs to implement username validation check 
-	var username = req.body.username;
-	var groupID = req.params.group;
-	console.log(groupID);
+	MongoClient.connect(dburl, (err, client) => {
+		if (err) {
+		  console.error(err)
+		  return
+		}
+		else{
+			const dbGroupee = client.db('groupee'); 
+			const collectionUser = dbGroupee.collection('users');
+			collectionUser.find({username : userName}, function (err, items) {
+				if(err){
+					console.log("User name does not exists");
+					res.redirect('/group/'+groupID);
+				}
+				else{
+					if(items.length!=0){
+						updateMember(userName, groupID);
+					}
+					res.redirect('/group/'+groupID);
+				}
+			});
+		}
+	});
+
+}
+
+function updateMember(username, groupID){
+
+
 	try{
 		var groupOID = mongoose.Types.ObjectId(groupID);
 	}
@@ -356,6 +381,7 @@ app.post('/group/:group(*)/invite', (req,res) => { // needs to implement usernam
 		console.log("Not a valid objectID");
 		res.redirect('/');
 	}
+
 	MongoClient.connect(dburl, (err, client) => {
 		if (err) {
 		  console.error(err)
@@ -375,7 +401,14 @@ app.post('/group/:group(*)/invite', (req,res) => { // needs to implement usernam
 			});
 		}
 	});
+}
 
+
+
+app.post('/group/:group(*)/invite', (req,res) => { // needs to implement username validation check 
+	var username = req.body.username;
+	var groupID = req.params.group;
+	inviteMember(username, updateMember, res, groupID);
 });
 
 //Invite Member Ends
