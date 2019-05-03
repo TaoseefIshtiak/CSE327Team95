@@ -354,14 +354,16 @@ function  inviteMember(userName, updateMember, res, groupID){
 		else{
 			const dbGroupee = client.db('groupee'); 
 			const collectionUser = dbGroupee.collection('users');
-			collectionUser.find({username : userName}, function (err, items) {
+			collectionUser.find({username : userName}).toArray((err, items) => {
 				if(err){
-					console.log("User name does not exists");
 					res.redirect('/group/'+groupID);
 				}
 				else{
 					if(items.length!=0){
 						updateMember(userName, groupID);
+					}
+					else{
+						console.log("User name does not exists");
 					}
 					res.redirect('/group/'+groupID);
 				}
