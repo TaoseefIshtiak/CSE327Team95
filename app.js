@@ -326,7 +326,7 @@ function groupMake(groupID, renderGroup, res){
 					}
 					else{
 						console.log("Group exists");
-						renderGroup(res);
+						renderGroup(res, groupID);
 					}				
 				}
 			});
@@ -334,7 +334,7 @@ function groupMake(groupID, renderGroup, res){
 	});
 }
 
-function renderGroup(res){
+function renderGroup(res, groupID){
 	res.render("invite", {"groupID" : groupID} );
 }
 
@@ -344,8 +344,6 @@ app.get('/group/:group(*)',(req,res) => {
 });
 
 
-<<<<<<< HEAD
-=======
 function  inviteMember(userName, updateMember, res, groupID){
 
 	MongoClient.connect(dburl, (err, client) => {
@@ -377,11 +375,7 @@ function  inviteMember(userName, updateMember, res, groupID){
 
 function updateMember(username, groupID){
 
->>>>>>> 512c8bfd83780e2673add45d2974dcba9912e063
 
-app.post('/group/:group(*)/invite', (req,res) => { // needs to implement username validation check 
-	var username = req.body.username;
-	var groupID = req.params.group;
 	try{
 		var groupOID = mongoose.Types.ObjectId(groupID);
 	}
@@ -389,6 +383,7 @@ app.post('/group/:group(*)/invite', (req,res) => { // needs to implement usernam
 		console.log("Not a valid objectID");
 		res.redirect('/');
 	}
+
 	MongoClient.connect(dburl, (err, client) => {
 		if (err) {
 		  console.error(err)
@@ -408,7 +403,14 @@ app.post('/group/:group(*)/invite', (req,res) => { // needs to implement usernam
 			});
 		}
 	});
+}
 
+
+
+app.post('/group/:group(*)/invite', (req,res) => { // needs to implement username validation check 
+	var username = req.body.username;
+	var groupID = req.params.group;
+	inviteMember(username, updateMember, res, groupID);
 });
 
 //Invite Member Ends
@@ -736,18 +738,13 @@ app.get('/profile', isLoggedIn, function(req, res){
 			  });
 			  collectiondbGroupList.find().toArray((err, items) => {
 				Infos = items;
-				for(var i =1; i< items.length; i++){
+				for(var i =0; i< items.length; i++){
 					for (var j = 0; j < items[i].memberIDs.length; j++) {
 						if(items[i].memberIDs[j] == userprofile){
 							console.log(userprofile + "is a member of "+ items[i].groupName);
-							res.render('profile', {'infos': items[i],
-													viewTitle: "Update user"});
 							}
 					}
 				}	
-				console.log(items.length);
-				console.log(items[1].memberIDs.length);
-
 			  });
 		}
 	});
