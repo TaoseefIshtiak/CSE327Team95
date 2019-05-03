@@ -78,9 +78,12 @@ app.use(express.static(__dirname + '/views'));
 
 //creating a new group from home page
 app.get("/", function(req, res){
-	res.render("Homepage");
+	res.render("Firstpage");
 });
 
+app.get("/homepage", function(req, res){
+	res.render("Homepage");
+});
 
 //createGroup
 
@@ -167,7 +170,7 @@ app.get("/createPost", isLoggedIn, function(req, res){
 				// console.log(items)
 				Infos = items;
 				//var parseVal = JSON.parse(items);
-         		console.log(items);
+				 console.log(items);
             	res.render('group', {'infos': items});
 			  });
 		}
@@ -259,9 +262,7 @@ app.post("/register", function(req, res){
 			return res.render('Firstpage');
 		}
 		passport.authenticate("local")(req, res, function(){
-			res.render("profile", {
-				'infos': req.body.username
-			});
+			res.render("Homepage");
 			console.log("User account creation successful for "+ req.body.username);
 			console.log("a new user added to the users collection");
 		});
@@ -314,9 +315,26 @@ app.post("/login", function(req, res){
 	userprofile = req.body.username
 	//profilename = userprofile
 	passport.authenticate("local")(req, res, function(){
-		res.render("profile", {
-			'infos': req.body.username
-	});
+		MongoClient.connect(dburl, (err, client) => {
+			if (err) {
+			  console.error(err)
+			  return
+			}
+			else{
+				const dbUserInfo = client.db('groupee');
+				const collectiondbUserInfo = dbUserInfo.collection('users');
+				collectiondbUserInfo.find().toArray((err, items) => {
+					Infos = items;
+					for (var i = 0; i < items.length; i++) { 
+						if(items[i].username == userprofile){
+							console.log(userprofile + "you are trying to read information of "+ items[i].username + items[i]._id);
+							usr_id = items[i]._id;
+							res.render('profile', {'infos': items[i]});
+						}
+					}
+				  });
+			}
+		});
 		console.log("hello "+ userprofile);
 		});
 }, passport.authenticate("local", {
@@ -610,7 +628,7 @@ app.get('/profile', isLoggedIn, function(req, res){
 				}
 			  });
 		}
-	  });
+	});
 });
 
 app.get('/editProfile', isLoggedIn, function(req, res){
