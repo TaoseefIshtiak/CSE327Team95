@@ -284,7 +284,7 @@ app.get('/download/:file(*)',(req, res) => {
 app.get('/group/:group(*)',(req,res) => {
 	var groupID = req.params.group;
 	try{
-		groupID = mongoose.Types.ObjectId(groupID);
+		var groupOID = mongoose.Types.ObjectId(groupID);
 	}
 	catch{
 		console.log("Not a valid objectID");
@@ -298,7 +298,7 @@ app.get('/group/:group(*)',(req,res) => {
 		else{
 			const dbGroupee = client.db('groupee');
 			const collectionGroup = dbGroupee.collection('groups');
-			collectionGroup.find({_id : groupID}).toArray((err, items) => {
+			collectionGroup.find({_id : groupOID}).toArray((err, items) => {
 				if(err){
 					console.log(err);
 				}
@@ -308,6 +308,7 @@ app.get('/group/:group(*)',(req,res) => {
 					}
 					else{
 						console.log('Found Group');
+						res.render("invite", {"groupID" : groupID} );
 					}
 							
 				}
@@ -317,7 +318,7 @@ app.get('/group/:group(*)',(req,res) => {
 
 });
 
-app.post('/invite/:group(*)', (req,res) => {
+app.post('/group/:group(*)/invite', (req,res) => {
 
 });
 
