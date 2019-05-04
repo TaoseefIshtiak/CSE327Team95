@@ -10,28 +10,22 @@ var express = require("express"),
 	multer = require('multer'),
 	passportLocalMongoose = require("passport-local-mongoose"),
 	path = require('path'),
-	Joi = require('joi'),
 	dburl = "mongodb://localhost:27017",
 	userprofile =  null,
 	usr_id = null,
 	todo_id = null,
-	//profilename = null,
-	userID = 2,
-	groupID = 3,
+	groupID = 1;
+	userID = 1;
 	chats = "chatss"
-	//db = require("./models/user.js"),
-	//collection = "users";
 	MongoClient = require("mongodb").MongoClient;
 	
 
 const app = express();
 const mongoOptions = {useNewUrlParser : true};
 
-//database connection part start  //////////////////////////////////////////
+
 mongoose.connect('mongodb://localhost:27017/groupee' , { useNewUrlParser: true });
 
-
-// database connection part ends /////////////////////////////////////////
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
@@ -56,12 +50,6 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage })
 
-// schema used for data validation for our todo document
-const schema = Joi.object().keys({
-    todo : Joi.string().required()
-});
-
-//app.use(express.static(__dirname + '/views'));
 
 // parses json data sent to us by the user 
 app.use(bodyParser.json());
@@ -72,9 +60,6 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 app.use(express.static(__dirname + '/views'));
 
-// app.get("/profile", isLoggedIn, function(req, res){  //using middleware and a facade design pattern
-// 	res.render("profile");
-// });
 
 //creating a new group from home page
 app.get("/", function(req, res){
@@ -87,10 +72,9 @@ app.get("/homepage", function(req, res){
 
 //createGroup
 
-app.get("/grouphome", function(req, res){
+app.get("/grouphome", isLoggedIn, function(req, res){
 	res.render("grouphome");
 });
-
 
 
 //handling Group Creation the Logical Part
@@ -110,7 +94,7 @@ app.post("/grouphome", function(req, res){
 	    console.error(error);
 		 }
 		else{
-			console.log("Your bee has been saved!");
+			console.log("Your group has been saved!");
 		}});
 		MongoClient.connect(dburl, (err, client) => {
 			if (err) {
@@ -121,18 +105,12 @@ app.post("/grouphome", function(req, res){
 				const dbPosts = client.db('groupee');
 				const collectiondbPosts = dbPosts.collection('posts');
 				collectiondbPosts.find().toArray((err, items) => {
-					// res.render('todos', {
-					// 	infos: items
-					// });
-					// console.log(items)
 					Infos = items;
-					//var parseVal = JSON.parse(items);
 					 console.log(items);
 					res.render('group', {'infos': items});
 				  });
 			}
 		});
-	console.log(userprofile+ " is trying to create a group");
 });
 
 //creating user post -------->
@@ -464,7 +442,7 @@ app.post("/myToDos", function(req, res){
 	});
 });
 
-app.get('/myToDos', function(req, res) {
+app.get('/myToDos', isLoggedIn, function(req, res) {
 	
 	MongoClient.connect(dburl, (err, client) => {
 		if (err) {
@@ -495,14 +473,38 @@ app.get('/myToDos', function(req, res) {
 });
 
 app.post('/updateTodo', (req, res) => {
-    updateTodo(req, res);
+		updateTodo(req, res);
+		MongoClient.connect(dburl, (err, client) => {
+			if (err) {
+				console.error(err)
+				return
+			}
+			else{
+				const dbToDos = client.db('groupee');
+				const collectiondbToDos = dbToDos.collection('todos');
+				collectiondbToDos.find().toArray((err, items) => {
+					Infos = items;
+					console.log(items);
+					res.render('todo', {'infos': items,
+												viewTitle: "Update todo",
+												'profile': userprofile});
+					for (var i = 0; i < items.length; i++) { 
+						if(items[i].createdby == userprofile){
+							console.log(items[i].createdby + " you are trying to read information of " + items[i]._id + items[i].todoList);
+							todo_id = items[i]._id;
+							console.log(items[i]._id);
+							console.log(items[i].todoList);
+						}
+					}
+					});
+			}
+		});
 });
 
 function updateTodo(req, res) {
 	console.log(todo_id);
     Todo.findOneAndUpdate({ _id: todo_id },{$set: {todoList: req.body.todo}}, { new: true }, (err, infos) => {
         if (!err){ 
-			res.redirect('secret'); 
 			console.log(infos);
 			console.log(req.body.todo);
 		}
@@ -516,11 +518,35 @@ function updateTodo(req, res) {
 app.get('/delete/:id', (req, res) => {
     Todo.findByIdAndRemove(req.params.id, (err, doc) => {
         if (!err) {
-			res.redirect('/secret');
 			console.log("todo removed from collection");
         }
         else { console.log('Error in employee delete :' + err); }
-    });
+		});
+		MongoClient.connect(dburl, (err, client) => {
+			if (err) {
+				console.error(err)
+				return
+			}
+			else{
+				const dbToDos = client.db('groupee');
+				const collectiondbToDos = dbToDos.collection('todos');
+				collectiondbToDos.find().toArray((err, items) => {
+					Infos = items;
+					console.log(items);
+					res.render('todo', {'infos': items,
+												viewTitle: "Update todo",
+												'profile': userprofile});
+					for (var i = 0; i < items.length; i++) { 
+						if(items[i].createdby == userprofile){
+							console.log(items[i].createdby + " you are trying to read information of " + items[i]._id + items[i].todoList);
+							todo_id = items[i]._id;
+							console.log(items[i]._id);
+							console.log(items[i].todoList);
+						}
+					}
+					});
+			}
+		});
 });
 
 
