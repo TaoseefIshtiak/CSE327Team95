@@ -4,7 +4,7 @@
 **Features**
 
 - Profile Creation
-- Group Creation
-- Creating, Updating, Deleting posts
+- Group Creation, Todo List Creation
+- Creating, Updating, Deleting posts/todo list
 - Implemented with singleton, and Facade design pattern
 - Unit Testing
