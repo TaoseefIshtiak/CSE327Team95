@@ -3,8 +3,7 @@
 
 **Features**
 
-- Profile Creation
-- Group Creation, Todo List Creation
+- Profile Creation, Group Creation, Todo List Creation
 - Creating, Updating, Deleting posts/todo list
-- Implemented with singleton, and Facade design pattern
+- User authentication with "passport", Implemented with singleton, and Facade design pattern
 - Unit Testing
