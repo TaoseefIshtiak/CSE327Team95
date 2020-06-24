@@ -4,6 +4,7 @@
 **Features**
 
 - Profile Creation
-- Create Group
+- Group Creation
 - Creating, Updating, Deleting posts
 - Implemented with singleton, and Facade design pattern
+- Unit Testing
